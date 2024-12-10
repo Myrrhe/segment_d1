@@ -4,6 +4,8 @@ cmake_minimum_required(VERSION 3.11-3.18)
 
 set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
 
+set(CMAKE_CXX_COMPILER "C:/msys64/mingw64/bin/g++.exe")
+
 project(main)
 
 file(GLOB SOURCES include /*.hpp *.cpp)
