@@ -587,8 +587,8 @@ float64_t Func::getAngleBetween(const sf::Vector2<float64_t> &v1,
     return std::acos((v1 * v2) / (getNorm(v1) * getNorm(v2)));
 }
 
-sf::Vector2<float32_t> getRotated(const sf::Vector2<float32_t> &vec,
-                                  const float32_t angle)
+sf::Vector2<float32_t> Func::getRotated(const sf::Vector2<float32_t> &vec,
+                                        const float32_t angle)
 {
     return sf::Vector2<float32_t>(
         (vec.x * std::cos(angle)) + (vec.y * std::sin(angle)),
@@ -712,9 +712,9 @@ std::string Func::getStringHourVeryPrecise()
     const errno_t err = ::localtime_s(&localTime, &tt);
     const std::size_t written =
         ::strftime(&format[0], 12, "%H:%M:%S", &localTime);
-    const int32_t writtenMilli = ::sprintf(&format[0], "%s:%03d", &format[0],
-                                           static_cast<int32_t>(millis));
-    if ((0 != err) || (0 == written) || (0 == writtenMilli))
+    if (const int32_t writtenMilli = ::sprintf(
+            &format[0], "%s:%03d", &format[0], static_cast<int32_t>(millis));
+        (0 != err) || (0 == written) || (0 == writtenMilli))
     {
         format = "[error_time]";
     }
@@ -730,8 +730,7 @@ std::array<uint64_t, 4> Func::getHourVeryPrecise()
         millis = (currentTime.time_since_epoch().count() / 1'000'000) % 1000;
     std::tm localTime;
     const std::time_t tt = std::chrono::system_clock::to_time_t(currentTime);
-    const errno_t err = ::localtime_s(&localTime, &tt);
-    if (0 == err)
+    if (const errno_t err = ::localtime_s(&localTime, &tt); 0 == err)
     {
         res = {{static_cast<uint64_t>(localTime.tm_hour),
                 static_cast<uint64_t>(localTime.tm_min),
@@ -870,8 +869,7 @@ sf::String Func::evaluateSpecialChars(const sf::String &str)
     const std::size_t sizeStr = str.getSize();
     while (i < sizeStr)
     {
-        const sf::Uint32 c = str[i];
-        if ('\\' == c)
+        if (const sf::Uint32 c = str[i]; '\\' == c)
         {
             ++i;
             const sf::Uint32 n = str[i];

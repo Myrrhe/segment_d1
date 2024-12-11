@@ -1,8 +1,8 @@
-#ifndef TYPES_HPP
-#define TYPES_HPP
+#ifndef GLOBAL_HPP
+#define GLOBAL_HPP
 
 #ifndef DEBUG
 #define DEBUG 0
 #endif // DEBUG
 
-#endif // TYPES_HPP
+#endif // GLOBAL_HPP

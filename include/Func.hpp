@@ -19,6 +19,7 @@
 
 #ifndef FUNC_HPP
 #define FUNC_HPP
+#include "Global.hpp"
 #include "Quaternion.hpp"
 #include "StaticObject.hpp"
 #include <SFML/Graphics.hpp>
