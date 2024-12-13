@@ -35,6 +35,7 @@ namespace segment_d1
 std::ostream &operator<<(std::ostream &os, const sf::Color &right);
 
 std::ostream &operator<<(std::ostream &os, const sf::Vector2<int32_t> &right);
+std::ostream &operator<<(std::ostream &os, const sf::Vector2<uint32_t> &right);
 std::ostream &operator<<(std::ostream &os, const sf::Vector2<float32_t> &right);
 std::ostream &operator<<(std::ostream &os, const sf::Vector2<float64_t> &right);
 
@@ -373,6 +374,10 @@ public:
     static std::u32string str8Tostr32(const std::string_view &s);
 
     static std::string str32Tostr8(const std::u32string_view &s);
+
+    static sf::Texture loadTexture(const std::string &path,
+                                   const sf::Rect<int32_t> &area);
+    static sf::Texture loadTexture(const std::string &path);
 };
 
 } // namespace segment_d1

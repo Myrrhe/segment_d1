@@ -41,6 +41,11 @@ std::ostream &operator<<(std::ostream &os, const sf::Vector2<int32_t> &right)
     return os << '(' << right.x << ", " << right.y << ')';
 }
 
+std::ostream &operator<<(std::ostream &os, const sf::Vector2<uint32_t> &right)
+{
+    return os << '(' << right.x << ", " << right.y << ')';
+}
+
 std::ostream &operator<<(std::ostream &os, const sf::Vector2<float32_t> &right)
 {
     return os << '(' << right.x << ", " << right.y << ')';
@@ -1546,6 +1551,21 @@ std::string Func::str32Tostr8(const std::u32string_view &s)
     std::u32string str = {s.begin(), s.end()};
     utf32ToUtf8(str.begin(), str.end(), std::back_inserter(res));
     return res;
+}
+
+sf::Texture Func::loadTexture(const std::string &path,
+                              const sf::Rect<int32_t> &area)
+{
+    sf::Image image;
+    sf::Texture texture;
+    image.loadFromFile(path);
+    texture.loadFromImage(image, area);
+    return texture;
+}
+
+sf::Texture Func::loadTexture(const std::string &path)
+{
+    return loadTexture(path, sf::Rect<int>(0, 0, 0, 0));
 }
 
 } // namespace segment_d1

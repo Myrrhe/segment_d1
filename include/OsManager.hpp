@@ -26,6 +26,7 @@
 #include "StaticObject.hpp"
 #include "Types.hpp"
 #include <SFML/Graphics.hpp>
+#include <memory>
 #include <string>
 
 #ifdef __linux__
@@ -57,8 +58,52 @@ public:
 
     static uint64_t getPhysicalMemoryUsed();
     static uint64_t getPhysicalMemoryUsedProcess();
+    static uint64_t getVirtualMemoryUsedProcess();
 
-    static uint64_t getMaxRAM();
+    [[nodiscard]] static uint64_t getMaxRAM();
+
+    static void setPath(const std::string_view &newArgv0);
+
+    [[nodiscard]] static const std::string &getPath();
+
+    static sf::Vector2<uint32_t> getSizePng(const std::string &file);
+
+    static void loadTextureR(
+        const std::string &dir,
+        std::shared_ptr<std::map<std::string, sf::Texture, std::less<>>>
+            &mapTexture,
+        const std::vector<std::string> *const vectorIdTexture,
+        uint32_t *const nbTextureCurrent);
+
+    static void loadTextureEmptyR(
+        const std::string &dir,
+        const std::shared_ptr<std::map<std::string, sf::Texture, std::less<>>>
+            &mapTexture,
+        std::map<std::string, sf::Rect<int32_t>, std::less<>>
+            *const mapTextureRect,
+        std::map<std::string, bool, std::less<>> *const mapTextureLoaded,
+        std::map<std::string, std::string, std::less<>> *const mapTexturePath,
+        std::vector<std::string> *const vectorIdTexture,
+        std::vector<sf::Texture *> *const vectorPointerTexture,
+        uint32_t *const nbTextureTotal);
+
+    static void loadOneTexture(
+        const std::string &dir,
+        const std::shared_ptr<std::map<std::string, sf::Texture, std::less<>>>
+            &mapTexture,
+        std::vector<std::string> *const vectorIdTexture,
+        uint32_t *const nbTextureCurrent, const std::string &name);
+
+    static void loadOneTextureEmpty(
+        const std::string &dir,
+        std::map<std::string, sf::Texture, std::less<>> *const mapTexture,
+        std::map<std::string, sf::Rect<int32_t>, std::less<>>
+            *const mapTextureRect,
+        std::map<std::string, bool, std::less<>> *const mapTextureLoaded,
+        std::map<std::string, std::string, std::less<>> *const mapTexturePath,
+        std::vector<std::string> *const vectorIdTexture,
+        std::vector<sf::Texture *> *const vectorPointerTexture,
+        uint32_t *const nbTextureTotal, const std::string &name);
 
     static const char SlashC;
     static const std::string Slash;
@@ -68,8 +113,20 @@ public:
     static const uint32_t WidthIcon;
     static const uint32_t HeightIcon;
 
+    static std::vector<std::string> envPath;
+    static std::string path;
+    static std::string protoPath;
+    static std::string cwd;
+    static std::string argv0;
+    static std::string card;
+    static std::string vendor;
+    static std::string glVer;
+    static std::string glslVer;
+    static bool firstTextureRead;
+
 private:
     static uint64_t maxRAM;
+    static uint64_t maxVirtualMemory;
 };
 
 } // namespace segment_d1
