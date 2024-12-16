@@ -19,6 +19,7 @@
 
 #include "WindowManager.hpp"
 #include "Constants.hpp"
+#include "Logger.hpp"
 #include "MouseWheel.hpp"
 #include "OsManager.hpp"
 #include "PathManager.hpp"
@@ -77,15 +78,21 @@ void WindowManager::create()
 
 void WindowManager::initialize()
 {
-    // textureIcon = new sf::Texture;
-    // textureIcon->loadFromFile(PathManager::getPath(PathManager::Dir::IMG) +
-    // OsManager::Slash + OsManager::StrIcon); textureIcon->setSmooth(false);
-    // textureIcon->setRepeated(false);
-    // if (textureIcon->getSize().x > 0 && textureIcon->getSize().y > 0)
-    // {
-    //     renderWindow->setIcon(OsManager::WidthIcon, OsManager::HeightIcon,
-    //     textureIcon->copyToImage().getPixelsPtr());
-    // }
+    textureIcon = std::make_unique<sf::Texture>();
+    Logger().info(PathManager::getPath(PathManager::Dir::IMG) +
+                  OsManager::Slash + OsManager::StrIcon);
+    if (textureIcon->loadFromFile(PathManager::getPath(PathManager::Dir::IMG) +
+                                  OsManager::Slash + OsManager::StrIcon))
+    {
+        textureIcon->setSmooth(false);
+        textureIcon->setRepeated(false);
+        if ((textureIcon->getSize().x > 0) && (textureIcon->getSize().y > 0))
+        {
+            renderWindow->setIcon(OsManager::WidthIcon, OsManager::HeightIcon,
+                                  textureIcon->copyToImage().getPixelsPtr());
+        }
+    }
+
     renderWindow->setTitle("Watch");
     renderWindow->setVerticalSyncEnabled(false);
     renderWindow->setMouseCursorVisible(true);
@@ -307,6 +314,11 @@ void WindowManager::draw(const sf::Drawable &drawable,
                          const sf::RenderStates &states)
 {
     renderWindow->draw(drawable, states);
+}
+
+void WindowManager::draw(const sf::Drawable &drawable)
+{
+    renderWindow->draw(drawable, sf::RenderStates::Default);
 }
 
 void WindowManager::display() { renderWindow->display(); }

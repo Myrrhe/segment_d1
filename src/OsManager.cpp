@@ -20,6 +20,9 @@
 #include "OsManager.hpp"
 #include "Constants.hpp"
 #include "Func.hpp"
+#include "Logger.hpp"
+#include <GL/glu.h>
+#include <codecvt>
 #include <cstring>
 #include <fstream>
 #include <iostream>
@@ -41,6 +44,8 @@
 #elif _OSX
 
 #endif // __linux__
+
+#include <Shcore.h>
 
 namespace segment_d1
 {
@@ -64,6 +69,8 @@ const uint32_t OsManager::HeightIcon = 128;
 
 const std::string OsManager::Slash = std::string(1, OsManager::SlashC);
 
+std::vector<ScreenConnected> OsManager::screens;
+std::vector<std::wstring> OsManager::displayDeviceNames;
 std::vector<std::string> OsManager::envPath;
 std::string OsManager::path;
 std::string OsManager::protoPath;
@@ -74,6 +81,301 @@ std::string OsManager::vendor;
 std::string OsManager::glVer;
 std::string OsManager::glslVer;
 bool OsManager::firstTextureRead;
+
+std::string OsManager::stdVer;
+std::uint64_t OsManager::RAM;
+std::string OsManager::processor;
+std::string OsManager::OS;
+std::string OsManager::verOS;
+std::string OsManager::archOS;
+
+bool OsManager::colorOn;
+
+std::wstring OsManager::strTowstr(const std::string &str)
+{
+    return std::wstring_convert<std::codecvt_utf8<wchar_t>, wchar_t,
+                                std::allocator<wchar_t>, std::allocator<char>>()
+        .from_bytes(str);
+}
+
+std::string OsManager::wstrTostr(const std::wstring &wstr)
+{
+    return std::wstring_convert<std::codecvt_utf8<wchar_t>, wchar_t,
+                                std::allocator<wchar_t>, std::allocator<char>>()
+        .to_bytes(wstr);
+}
+
+void OsManager::initialize()
+{
+    initializeVer();
+    initializeListScreen();
+    colorOn = true;
+}
+
+void OsManager::initializeVer()
+{
+#ifdef __linux__
+    long int numPages = sysconf(_SC_PHYS_PAGES);
+    long int pageSize = sysconf(_SC_PAGE_SIZE);
+    // convert to MiB from B
+    RAM = static_cast<std::uint64_t>(numPages * pageSize /**1000*/ /
+                                     (1024l * 1024l /**1024l*/));
+    std::array<int, 12ul> model;
+    /*auto*/ unsigned int callId = 0x80000002;
+    asm volatile("cpuid"
+                 : "=a"(model[0]), "=b"(model[1]), "=c"(model[2]),
+                   "=d"(model[3])
+                 : "a"(callId));
+    ++callId;
+    asm volatile("cpuid"
+                 : "=a"(model[4]), "=b"(model[5]), "=c"(model[6]),
+                   "=d"(model[7])
+                 : "a"(callId));
+    ++callId;
+    asm volatile("cpuid"
+                 : "=a"(model[8]), "=b"(model[9]), "=c"(model[10]),
+                   "=d"(model[11])
+                 : "a"(callId));
+    // model is null-terminated
+    processor =
+        static_cast<std::string>(reinterpret_cast<const char *>(&model[0]));
+    // remove leading spaces (string is provided right-justified
+    processor.erase(0, processor.find_first_not_of(' '));
+    utsname linuxInfo;
+    if (uname(&linuxInfo) == -1)
+    {
+        OS = /*""*/ "Unknown";
+        verOS = /*""*/ "Unknown";
+        archOS = /*""*/ "Unknown";
+    }
+    else
+    {
+        OS = static_cast<std::string>(linuxInfo.sysname) + " " +
+             static_cast<std::string>(linuxInfo.version);
+        verOS = static_cast<std::string>(linuxInfo.release);
+        archOS = static_cast<std::string>(linuxInfo.machine);
+    }
+    stdVer = "C++" + std::to_string((__cplusplus / 100) % 100);
+    card = static_cast<std::string>(
+        reinterpret_cast<const char *>(glGetString(GL_RENDERER)));
+    vendor = static_cast<std::string>(
+        reinterpret_cast<const char *>(glGetString(GL_VENDOR)));
+    glVer = static_cast<std::string>(
+        reinterpret_cast<const char *>(glGetString(GL_VERSION)));
+    glslVer = static_cast<std::string>(reinterpret_cast<const char *>(
+        glGetString(GL_SHADING_LANGUAGE_VERSION)));
+#elif _WIN32
+    RAM = 0;
+    processor = "Unknown";
+    OS = "Windows";
+    // It work
+    OSVERSIONINFOEX osvi;
+    ZeroMemory(&osvi, sizeof(OSVERSIONINFOEX));
+    osvi.dwOSVersionInfoSize = sizeof(OSVERSIONINFOEX);
+    if (TRUE == GetVersionEx(reinterpret_cast<OSVERSIONINFO *>(&osvi)))
+    {
+        std::basic_ostringstream<char, std::char_traits<char>,
+                                 std::allocator<char>>
+            oss;
+        oss << osvi.dwMajorVersion << '.' << osvi.dwMinorVersion << '.'
+            << osvi.dwBuildNumber;
+        oss << " SP" << osvi.wServicePackMajor << '.' << osvi.wServicePackMinor;
+        verOS = oss.str();
+    }
+    archOS = "Unknwown";
+    const int64_t startVerCpp = 100;
+    const int64_t lenVerCpp = 100;
+    stdVer = "C++" + std::to_string((__cplusplus / startVerCpp) % lenVerCpp);
+    card = static_cast<std::string>(
+        reinterpret_cast<const char *>(::glGetString(GL_RENDERER)));
+    vendor = static_cast<std::string>(
+        reinterpret_cast<const char *>(::glGetString(GL_VENDOR)));
+    glVer = static_cast<std::string>(
+        reinterpret_cast<const char *>(::glGetString(GL_VERSION)));
+    glslVer = "Unknown";
+#elif _OSX
+#endif // __linux__
+}
+
+void OsManager::initializeListScreen()
+{
+#ifdef __linux__
+    Display *disp = XOpenDisplay(nullptr);
+    screens.resize(static_cast<long unsigned int>(XScreenCount(disp)));
+    displayDeviceNames.resize(screens.size());
+    for (long unsigned int i = 0ul; i < screens.size(); i++)
+    {
+        Screen screen = *XScreenOfDisplay(disp, static_cast<int>(i));
+        Window root = RootWindow(disp, i);
+        XRRScreenResources *ressource = XRRGetScreenResources(disp, root);
+        XRROutputInfo *output =
+            XRRGetOutputInfo(disp, ressource, *(ressource->outputs));
+        std::string strName = static_cast<std::string>(output->name);
+        // Make room for characters
+        screens[i].name = /*L""*/ std::wstring(strName.length(), L' ');
+        // Copy string to wstring.
+        std::copy(strName.begin(), strName.end(), screens[i].name.begin());
+        displayDeviceNames[i] = /*screens[i].name*/ L"Unknown";
+        screens[i].bounds =
+            sf::Rect<float>(0.0f, 0.0f, static_cast<float>(screen.width),
+                            static_cast<float>(screen.height));
+        XRRScreenConfiguration *conf = XRRGetScreenInfo(disp, root);
+        screens[i].refreshRate =
+            static_cast<unsigned int>(XRRConfigCurrentRate(conf));
+        screens[i].dpi = sf::Vector2<unsigned int>(
+            static_cast<unsigned int>(screen.width / (screen.mwidth / 25.4)),
+            static_cast<unsigned int>(screen.height / (screen.mheight / 25.4)));
+    }
+#elif _WIN32
+    ScreenConnected primaryScreen;
+    std::wstring primaryScreenDeviceName;
+    // Enumerate all available screen
+    DISPLAY_DEVICE displayDevice;
+    std::memset(&displayDevice, 0, sizeof(displayDevice));
+    displayDevice.cb = sizeof(displayDevice);
+    uint32_t count = 0;
+    while (TRUE == EnumDisplayDevices(nullptr, count, &displayDevice, 0))
+    {
+        ++count;
+        // check if the screen is not mirrored and there is actually a screen
+        // attached
+        if ((0 ==
+             (displayDevice.StateFlags & DISPLAY_DEVICE_MIRRORING_DRIVER)) &&
+            (0 !=
+             (displayDevice.StateFlags & DISPLAY_DEVICE_ATTACHED_TO_DESKTOP)))
+        {
+            // try to get the screens current desktop video mode
+            // to access its position and dimension in the virtual screen space
+            DEVMODE win32Mode;
+            std::memset(&win32Mode, 0, sizeof(win32Mode));
+            win32Mode.dmSize = sizeof(win32Mode);
+
+            if (FALSE == ::EnumDisplaySettingsA(displayDevice.DeviceName,
+                                                ENUM_CURRENT_SETTINGS,
+                                                &win32Mode))
+            {
+                Logger().info("Couldn't get settings of screen: " +
+                              std::string(displayDevice.DeviceName));
+                break;
+            }
+
+            // get the screens real name
+            DISPLAY_DEVICE nameDD;
+            std::memset(&nameDD, 0, sizeof(nameDD));
+            nameDD.cb = sizeof(nameDD);
+
+            if (FALSE == EnumDisplayDevices(displayDevice.DeviceName, 0,
+                                            &nameDD,
+                                            EDD_GET_DEVICE_INTERFACE_NAME))
+            {
+                Logger().info("Error loading screen.");
+            }
+
+            // get the DPI
+            sf::Vector2<uint32_t> dpi;
+
+            // Since windows 8.1 you can get the DPI on a per monitor basis
+            //=================================================================
+            if (const HMODULE hShcore = LoadLibrary(/*L*/ "Shcore.dll");
+                nullptr != hShcore)
+            {
+                typedef HRESULT(WINAPI * GetDpiForMonitorFuncType)(
+                    HMONITOR hmonitor, int32_t dpiType, UINT * dpiX,
+                    UINT * dpiY);
+
+                // GetDpiForMonitor function address
+                if (auto *const pGetDpiForMonitor =
+                        reinterpret_cast<GetDpiForMonitorFuncType>(
+                            ::GetProcAddress(hShcore, "GetDpiForMonitor"));
+                    nullptr != pGetDpiForMonitor)
+                {
+                    // Handle to monitor
+                    if (const HMONITOR hMonitor = ::MonitorFromPoint(
+                            POINT{0, 0}, MONITOR_DEFAULTTOPRIMARY);
+                        nullptr != hMonitor)
+                    {
+                        UINT dpiX = 0;
+                        UINT dpiY = 0;
+                        const HRESULT hr = pGetDpiForMonitor(
+                            hMonitor, /*MDT_Effective_DPI*/ 0, &dpiX, &dpiY);
+                        if (!FAILED(hr))
+                        {
+                            dpi = sf::Vector2<uint32_t>(dpiX, dpiY);
+                        }
+                    }
+                }
+                if (FALSE == ::FreeLibrary(hShcore))
+                {
+                    Logger().info("Error freeing libraries");
+                }
+            }
+            //=================================================================
+
+            // If the library loading failed (library not available or windows
+            // version < 8.1) use the old way of getting the DPI (one value for
+            // all monitors)
+            if (dpi == sf::Vector2<uint32_t>())
+            {
+                const HDC hdc = CreateDC(displayDevice.DeviceName, nullptr,
+                                         nullptr, nullptr);
+                if (nullptr != hdc)
+                {
+                    dpi = sf::Vector2<uint32_t>(
+                        static_cast<uint32_t>(::GetDeviceCaps(hdc, LOGPIXELSX)),
+                        static_cast<uint32_t>(
+                            ::GetDeviceCaps(hdc, LOGPIXELSY)));
+                }
+            }
+
+            // save the data
+            ScreenConnected screen;
+            screen.name =
+                strTowstr(static_cast<std::string>(nameDD.DeviceString));
+            screen.bounds = sf::Rect<float32_t>(
+                static_cast<float32_t>(win32Mode.dmPosition.x),
+                static_cast<float32_t>(win32Mode.dmPosition.y),
+                static_cast<float32_t>(win32Mode.dmPelsWidth),
+                static_cast<float32_t>(win32Mode.dmPelsHeight));
+            screen.refreshRate = win32Mode.dmDisplayFrequency;
+            screen.dpi = dpi;
+
+            // sort any additional screen is from left to right
+            if (0 != (displayDevice.StateFlags & DISPLAY_DEVICE_PRIMARY_DEVICE))
+            {
+                primaryScreen = screen;
+                primaryScreenDeviceName = strTowstr(
+                    static_cast<std::string>(displayDevice.DeviceName));
+                continue;
+            }
+            else
+            {
+                std::size_t index = screens.size();
+                const std::size_t screensSize = screens.size();
+                for (std::size_t i = 0; i < screensSize; ++i)
+                {
+                    if (screens[i].bounds.left > screen.bounds.left)
+                    {
+                        index = i;
+                        break;
+                    }
+                }
+                screens.insert(screens.begin() + static_cast<int64_t>(index),
+                               screen);
+                displayDeviceNames.insert(
+                    displayDeviceNames.begin() + static_cast<int64_t>(index),
+                    strTowstr(
+                        static_cast<std::string>(displayDevice.DeviceName)));
+            }
+        }
+    }
+
+    // the primary screen is always at index [0]
+    screens.insert(screens.begin(), primaryScreen);
+    displayDeviceNames.insert(displayDeviceNames.begin(),
+                              primaryScreenDeviceName);
+#elif _OSX
+#endif // __linux__
+}
 
 sf::Vector2<uint64_t> OsManager::getMonitorSize()
 {
@@ -715,7 +1017,7 @@ void OsManager::loadOneTexture(
                     static_cast<std::string>(file.cFileName));
                 ++(*nbTextureCurrent);
             }
-            if (file.dwFileAttributes & FILE_ATTRIBUTE_DIRECTORY)
+            if (0 != (file.dwFileAttributes & FILE_ATTRIBUTE_DIRECTORY))
             {
                 directories.push_back(tmp);
             }

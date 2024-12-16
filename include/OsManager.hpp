@@ -23,6 +23,7 @@
 ////////////////////////////////////////////////////////////
 // Headers
 ////////////////////////////////////////////////////////////
+#include "ScreenConnected.hpp"
 #include "StaticObject.hpp"
 #include "Types.hpp"
 #include <SFML/Graphics.hpp>
@@ -48,6 +49,12 @@ namespace segment_d1
 class OsManager final : public StaticObject
 {
 public:
+    static std::wstring strTowstr(const std::string& str);
+    static std::string wstrTostr(const std::wstring& wstr);
+
+    static void initialize();
+    static void initializeVer();
+    static void initializeListScreen();
     static sf::Vector2<uint64_t> getMonitorSize();
 
     static float64_t getWallTime();
@@ -113,6 +120,13 @@ public:
     static const uint32_t WidthIcon;
     static const uint32_t HeightIcon;
 
+private:
+    static std::vector<ScreenConnected> screens;
+    static std::vector<std::wstring> displayDeviceNames;
+
+    static uint64_t maxRAM;
+    static uint64_t maxVirtualMemory;
+
     static std::vector<std::string> envPath;
     static std::string path;
     static std::string protoPath;
@@ -124,9 +138,14 @@ public:
     static std::string glslVer;
     static bool firstTextureRead;
 
-private:
-    static uint64_t maxRAM;
-    static uint64_t maxVirtualMemory;
+    static std::string stdVer;
+    static std::uint64_t RAM;
+    static std::string processor;
+    static std::string OS;
+    static std::string verOS;
+    static std::string archOS;
+
+    static bool colorOn;
 };
 
 } // namespace segment_d1

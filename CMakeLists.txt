@@ -24,8 +24,21 @@ target_include_directories(main PUBLIC
     "C:/Users/thoma/perso-workspace/segment_d1/include"
 )
 
+target_compile_options(main PRIVATE
+    -isystem "C:/Users/thoma/perso-workspace/segment_d1/include"
+)
+
 target_link_directories(main PUBLIC "C:/Program Files (x86)/SFML/lib")
+
 add_compile_definitions(SFML_STATIC)
+
+#set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wall -Wextra -Weffc++ -Wundef -Wcast-align -Wwrite-strings -Wlogical-op -Wmissing-declarations -Wredundant-decls -Wshadow -Woverloaded-virtual -Wzero-as-null-pointer-constant -Wswitch-default -Wswitch-enum -Wmissing-include-dirs -Wunreachable-code -Winline -Winit-self -Wnon-virtual-dtor -pedantic -ansi -Wcast-qual -Wdisabled-optimization -Wdiv-by-zero -Wendif-labels -Wformat-extra-args -Wformat-nonliteral -Wformat-security -Wformat-y2k -Wimport -Winvalid-pch -Wmissing-braces -Wmultichar -Wpacked -Wpointer-arith -Wreturn-type -Wsequence-point -Wvariadic-macros -Wfloat-equal -Wstrict-aliasing=1 -Wstrict-overflow=5 -Wunsafe-loop-optimizations -Wnull-dereference -Wuninitialized -Wstringop-overflow=4 -Wstringop-truncation -Walloc-zero -Walloca -Wduplicated-branches -Wduplicated-cond -Wtrampolines -Wunused-macros -Wconditionally-supported -Wdate-time -Wvarargs -Wvector-operation-performance -Wopenmp-simd -Whsa -Wextra-semi -Warray-bounds=2 -Wformat-truncation=2 -Wunused-const-variable=1 -Wuseless-cast -Wold-style-cast -Wsign-promo -Wvirtual-inheritance -Wstrict-null-sentinel -Wsync-nand -Wunused-parameter -Wunused -Wsuggest-attribute=pure -Wsuggest-attribute=const -Wsuggest-attribute=noreturn -Wsuggest-attribute=malloc -Wmissing-noreturn -Wmissing-format-attribute -Wimplicit-fallthrough=5 -Wif-not-aligned -Wformat-signedness -Wsuggest-override -Wsuggest-final-methods -Wsuggest-final-types -Wstack-protector -Wenum-compare -Wlong-long -Wmultiple-inheritance -Wdouble-promotion -Wsign-conversion -Wfloat-conversion -Wconversion -Wnoexcept -Wnoexcept-type -Wclass-memaccess -Wregister -Wctor-dtor-privacy -Wsynth -Wlto-type-mismatch -Wliteral-suffix -Wdelete-non-virtual-dtor")
+set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wall -Wextra -Weffc++ -Wundef -Wcast-align -Wwrite-strings -Wlogical-op -Wmissing-declarations -Wredundant-decls -Wshadow -Woverloaded-virtual -Wzero-as-null-pointer-constant -Wswitch-default -Wswitch-enum -Wmissing-include-dirs -Wunreachable-code -Winline -Winit-self -Wnon-virtual-dtor -pedantic -Wcast-qual -Wdisabled-optimization -Wdiv-by-zero -Wendif-labels -Wformat-extra-args -Wformat-nonliteral -Wformat-security -Wformat-y2k -Wimport -Winvalid-pch -Wmissing-braces -Wmultichar -Wpacked -Wpointer-arith -Wreturn-type -Wsequence-point -Wvariadic-macros -Wfloat-equal -Wstrict-aliasing=1 -Wstrict-overflow=5 -Wunsafe-loop-optimizations -Wnull-dereference -Wuninitialized -Wstringop-overflow=4 -Wstringop-truncation -Walloc-zero -Walloca -Wduplicated-branches -Wduplicated-cond -Wtrampolines -Wunused-macros -Wconditionally-supported -Wdate-time -Wvarargs -Wvector-operation-performance -Wopenmp-simd -Whsa -Wextra-semi -Warray-bounds=2 -Wformat-truncation=2 -Wunused-const-variable=1 -Wuseless-cast -Wold-style-cast -Wsign-promo -Wvirtual-inheritance -Wstrict-null-sentinel -Wsync-nand -Wunused-parameter -Wunused -Wsuggest-attribute=pure -Wsuggest-attribute=const -Wsuggest-attribute=noreturn -Wsuggest-attribute=malloc -Wmissing-noreturn -Wmissing-format-attribute -Wimplicit-fallthrough=5 -Wif-not-aligned -Wformat-signedness -Wsuggest-override -Wsuggest-final-methods -Wsuggest-final-types -Wstack-protector -Wenum-compare -Wlong-long -Wmultiple-inheritance -Wdouble-promotion -Wsign-conversion -Wfloat-conversion -Wconversion -Wnoexcept -Wnoexcept-type -Wclass-memaccess -Wregister -Wctor-dtor-privacy -Wsynth -Wlto-type-mismatch -Wliteral-suffix -Wdelete-non-virtual-dtor -Wno-unused -Wno-missing-format-attribute -Wc++17-compat -Wpadded")
+set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wno-cast-function-type")
+# -ansi
+# -Wnamespaces
+# -Wtemplates
+# -Wabi-tag -Wsystem-headers -Wpadded -Waggregate-return
 
 target_link_libraries(main sfml-network-s)
 target_link_libraries(main sfml-audio-s)

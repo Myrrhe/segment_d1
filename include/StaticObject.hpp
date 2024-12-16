@@ -9,6 +9,7 @@ namespace segment_d1
 ////////////////////////////////////////////////////////////
 class StaticObject
 {
+public:
     StaticObject() = delete;
     StaticObject(const StaticObject &rhs) = delete;
     StaticObject(StaticObject &&rhs) = delete;

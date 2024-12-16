@@ -55,6 +55,7 @@ public:
                      const sf::RenderStates &states);
     static void draw(const sf::Drawable &drawable,
                      const sf::RenderStates &states);
+    static void draw(const sf::Drawable &drawable);
     static void display();
     static sf::Vector2<int32_t> getMousePosition();
     static sf::Vector2<float32_t>

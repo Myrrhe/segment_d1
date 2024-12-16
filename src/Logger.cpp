@@ -21,7 +21,7 @@
 
 namespace segment_d1
 {
-Logger::Logger() = default;
+Logger::Logger() : mtx(std::mutex()) {}
 
 std::string Logger::getCurrentTime() const
 {
@@ -34,9 +34,8 @@ std::string Logger::getCurrentTime() const
     {
         const std::size_t bufferSize = 100;
         res = std::string(bufferSize, '\0');
-        const std::string format = "%Y-%m-%d %H:%M:%S";
         const std::size_t written = std::strftime(
-            res.data(), bufferSize, format.data(), &localTime);
+            res.data(), bufferSize, "%Y-%m-%d %H:%M:%S", &localTime);
         if (written > 0)
         {
             res.resize(written);

@@ -33,7 +33,7 @@ std::string PathManager::exeName;
 const std::string PathManager::PathName = "chrono";
 const std::string PathManager::PathExtension = ".ini";
 
-const std::string PathManager::FolderDat = "dat";
+const std::string PathManager::FolderDat = "assets";
 const std::string PathManager::FolderImg = "img";
 const std::string PathManager::FolderSound = "sound";
 const std::string PathManager::FolderFont = "font";

@@ -690,9 +690,8 @@ std::string Func::getStringHourPrecise()
     {
         const std::size_t bufferSize = 100;
         res = std::string(bufferSize, '\0');
-        const std::string format = "%H:%M:%S";
         const std::size_t written =
-            std::strftime(res.data(), bufferSize, format.data(), &localTime);
+            std::strftime(res.data(), bufferSize, "%H:%M:%S", &localTime);
         if (written > 0)
         {
             res.resize(written);
@@ -1448,25 +1447,36 @@ Func::utf8ToUtf32(std::string::const_iterator be,
     {
         char32_t codepoint = 0;
         // decode the character
-        const uint8_t trailingBytes = trailing[static_cast<uint8_t>(*be)];
-        if ((be + trailingBytes) < en)
+        if (const uint8_t trailingBytes = trailing[static_cast<uint8_t>(*be)];
+            (be + trailingBytes) < en)
         {
-            switch (trailingBytes)
+            for (std::size_t i = 0; i <= trailingBytes; ++i)
             {
-            case 5:
-                (codepoint += static_cast<uint8_t>(*be++)) <<= 6;
-            case 4:
-                (codepoint += static_cast<uint8_t>(*be++)) <<= 6;
-            case 3:
-                (codepoint += static_cast<uint8_t>(*be++)) <<= 6;
-            case 2:
-                (codepoint += static_cast<uint8_t>(*be++)) <<= 6;
-            case 1:
-                (codepoint += static_cast<uint8_t>(*be++)) <<= 6;
-            case 0:
-                codepoint += static_cast<uint8_t>(*be++);
-            default:;
+                if (trailingBytes != i)
+                {
+                    (codepoint += static_cast<uint8_t>(*be++)) <<= 6;
+                }
+                else
+                {
+                    (codepoint += static_cast<uint8_t>(*be++)) <<= 6;
+                }
             }
+            // switch (trailingBytes)
+            // {
+            // case 5:
+            //     (codepoint += static_cast<uint8_t>(*be++)) <<= 6;
+            // case 4:
+            //     (codepoint += static_cast<uint8_t>(*be++)) <<= 6;
+            // case 3:
+            //     (codepoint += static_cast<uint8_t>(*be++)) <<= 6;
+            // case 2:
+            //     (codepoint += static_cast<uint8_t>(*be++)) <<= 6;
+            // case 1:
+            //     (codepoint += static_cast<uint8_t>(*be++)) <<= 6;
+            // case 0:
+            //     codepoint += static_cast<uint8_t>(*be++);
+            // default:;
+            // }
             codepoint -= offsets[trailingBytes];
         }
         else
@@ -1515,22 +1525,36 @@ Func::utf32ToUtf8(std::u32string::const_iterator be,
         }
 
         // Extract the bytes to write
-        std::array<unsigned char, 4> bytes;
-        switch (bytestoWrite)
+        std::array<uint8_t, 4> bytes;
+        for (std::size_t i = bytestoWrite; i > 0; --i)
         {
-        case 4:
-            bytes[3] = static_cast<uint8_t>((input | 0x80) & 0xBF);
-            input >>= 6;
-        case 3:
-            bytes[2] = static_cast<uint8_t>((input | 0x80) & 0xBF);
-            input >>= 6;
-        case 2:
-            bytes[1] = static_cast<uint8_t>((input | 0x80) & 0xBF);
-            input >>= 6;
-        case 1:
-            bytes[0] = static_cast<uint8_t>(input | firstBytes[bytestoWrite]);
-        default:;
+            if (1 == i)
+            {
+                bytes[i - 1] =
+                    static_cast<uint8_t>(input | firstBytes[bytestoWrite]);
+            }
+            else
+            {
+                bytes[i - 1] = static_cast<uint8_t>((input | 0x80) & 0xBF);
+                input >>= 6;
+            }
         }
+        // switch (bytestoWrite)
+        // {
+        // case 4:
+        //     bytes[3] = static_cast<uint8_t>((input | 0x80) & 0xBF);
+        //     input >>= 6;
+        // case 3:
+        //     bytes[2] = static_cast<uint8_t>((input | 0x80) & 0xBF);
+        //     input >>= 6;
+        // case 2:
+        //     bytes[1] = static_cast<uint8_t>((input | 0x80) & 0xBF);
+        //     input >>= 6;
+        // case 1:
+        //     bytes[0] = static_cast<uint8_t>(input |
+        //     firstBytes[bytestoWrite]);
+        // default:;
+        // }
         // Add them to the output
         output = std::copy(bytes.data(), bytes.data() + bytestoWrite, output);
     }
@@ -1565,7 +1589,7 @@ sf::Texture Func::loadTexture(const std::string &path,
 
 sf::Texture Func::loadTexture(const std::string &path)
 {
-    return loadTexture(path, sf::Rect<int>(0, 0, 0, 0));
+    return loadTexture(path, sf::Rect<int32_t>(0, 0, 0, 0));
 }
 
 } // namespace segment_d1
