@@ -9,10 +9,7 @@ BlockText::BlockText() : NodeText(), infoText(), blocks({})
     // ctor
 }
 
-BlockText::~BlockText()
-{
-    // dtor
-}
+BlockText::~BlockText() = default;
 
 BlockText::BlockText(const BlockText &other)
     : NodeText(other), infoText(other.infoText), blocks(other.blocks)
@@ -20,11 +17,12 @@ BlockText::BlockText(const BlockText &other)
     release();
 }
 
-BlockText::BlockText(const std::u32string &str)
+BlockText::BlockText(const std::u32string_view &str)
     : NodeText(), infoText(), blocks({})
 {
     if (str.empty())
     {
+        // Nothing to do
     }
     /*
     std::vector<std::u32string> vecStr = {};
@@ -75,26 +73,16 @@ BlockText::BlockText(const std::u32string &str)
     */
 }
 
-BlockText &BlockText::operator=(const BlockText &rhs)
-{
-    if (this == &rhs)
-    {
-        return *this; // handle self assignment
-    }
-    // assignment operator
-    NodeText::operator=(rhs);
-    infoText = rhs.infoText;
-    blocks = rhs.blocks;
-    return *this;
-}
+BlockText &BlockText::operator=(const BlockText &rhs) = default;
 
 void BlockText::release()
 {
-    for (std::size_t i = 0; i < blocks.size(); i++)
+    const std::size_t blockSize = blocks.size();
+    for (std::size_t i = 0; i < blockSize; ++i)
     {
         blocks[i]->release();
     }
-    for (std::size_t i = 0; i < blocks.size(); i++)
+    for (std::size_t i = 0; i < blockSize; ++i)
     {
         delete blocks[i];
     }
@@ -104,28 +92,20 @@ void BlockText::release()
 
 NodeText::Type BlockText::getType() const { return Type::BLOCK; }
 
-bool BlockText::operator==(const NodeText &right) const
+bool BlockText::isEqual(const NodeText &right) const
 {
-    if (getType() != right.getType())
+    bool res = false;
+    if (getType() == right.getType())
     {
-        return false;
-    }
-    else
-    {
-        bool isEqual =
-            infoText == dynamic_cast<const BlockText *>(&right)->infoText;
-        for (std::size_t i = 0; i < blocks.size(); i++)
+        res = infoText == dynamic_cast<const BlockText *>(&right)->infoText;
+        const std::size_t blocksSize = blocks.size();
+        for (std::size_t i = 0; i < blocksSize; ++i)
         {
-            isEqual =
-                isEqual && *const_cast<const NodeText *>(blocks[i]) == right;
+            res = res &&
+                  (*const_cast<const NodeText *>(blocks[i])).isEqual(right);
         }
-        return isEqual;
     }
-}
-
-bool BlockText::operator!=(const NodeText &right) const
-{
-    return !(*this == right);
+    return res;
 }
 
 const std::u32string &BlockText::getStr() const { return EmptyStr32; }

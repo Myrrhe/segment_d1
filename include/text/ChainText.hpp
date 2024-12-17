@@ -8,13 +8,11 @@
 namespace segment_d1
 {
 
-class ChainText
+class ChainText final
 {
 public:
     /** Default constructor */
     ChainText();
-    /** Default destructor */
-    ~ChainText();
     /** Copy constructor
      *  \param other Object to copy from
      */
@@ -23,28 +21,27 @@ public:
      *  \param rhs Object to assign from
      *  \return A reference to this
      */
-    ChainText(const std::u32string &str);
-    ChainText(const std::string &str);
-    // ChainText(const sf::String& str);
+    explicit ChainText(const std::u32string &str);
+    explicit ChainText(const std::string &str);
     ChainText &operator=(const ChainText &rhs);
+    /** Default destructor */
+    ~ChainText();
 
-    std::size_t getSize() const;
+    [[nodiscard]] std::size_t getSize() const;
     bool isEmpty() const;
-    const NodeText *operator[](std::size_t i) const;
+    const NodeText *operator[](const std::size_t i) const;
 
     bool operator==(const ChainText &right) const;
     bool operator!=(const ChainText &right) const;
 
     uint64_t getNbChar() const;
-    uint64_t getNbChar(uint64_t i) const;
+    uint64_t getNbChar(const uint64_t i) const;
 
     std::u32string getStr() const;
 
     std::u32string toStr() const;
-
-protected:
 private:
-    bool parseString(const std::u32string &str, bool setNodes);
+    bool parseString(const std::u32string &str, const bool setNodes);
 
     std::vector<NodeText *> nodes;
     std::vector<LeafText> leafs;

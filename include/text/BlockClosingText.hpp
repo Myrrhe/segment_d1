@@ -28,13 +28,22 @@ public:
 
     const std::u32string &getStr() const override;
 
-    bool operator==(const NodeText &right) const override;
-    bool operator!=(const NodeText &right) const override;
+    bool isEqual(const NodeText &right) const override;
 
     std::u32string toStr() const override;
 
 protected:
 private:
+    friend bool operator==(const BlockClosingText &left,
+                           const BlockClosingText &right)
+    {
+        return left.getType() == right.getType();
+    }
+    friend bool operator!=(const BlockClosingText &left,
+                           const BlockClosingText &right)
+    {
+        return !(left == right);
+    }
 };
 
 } // namespace segment_d1

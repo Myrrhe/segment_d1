@@ -71,7 +71,7 @@ std::partial_ordering Quaternion::operator<=>(const Quaternion& right) const
 const float64_t &Quaternion::operator[](const std::size_t i) const
 {
     const std::size_t index = i % 4UL;
-    const float64_t* res = &t;
+    const float64_t *res = &t;
     if (0UL == index)
     {
         res = &x;

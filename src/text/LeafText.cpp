@@ -8,31 +8,18 @@ LeafText::LeafText() : NodeText(), str(U"")
     // ctor
 }
 
-LeafText::~LeafText()
-{
-    // dtor
-}
+LeafText::~LeafText() = default;
 
-LeafText::LeafText(const LeafText &other) : NodeText(other), str(other.str)
-{
-    // copy ctor
-}
+LeafText::LeafText(const LeafText &other) = default;
 
 LeafText::LeafText(const std::u32string &newStr) : NodeText(), str(newStr) {}
 
-LeafText &LeafText::operator=(const LeafText &rhs)
-{
-    if (this == &rhs)
-    {
-        return *this; // handle self assignment
-    }
-    // assignment operator
-    NodeText::operator=(rhs);
-    str = rhs.str;
-    return *this;
-}
+LeafText &LeafText::operator=(const LeafText &rhs) = default;
 
-void LeafText::release() {}
+void LeafText::release()
+{
+    // Nothing to do
+}
 
 NodeText::Type LeafText::getType() const { return Type::LEAF; }
 
@@ -42,21 +29,14 @@ const std::u32string &LeafText::getStr() const { return str; }
 
 std::size_t LeafText::getSize() const { return str.size(); }
 
-bool LeafText::operator==(const NodeText &right) const
+bool LeafText::isEqual(const NodeText &right) const
 {
-    if (getType() != right.getType())
+    bool res = false;
+    if (getType() == right.getType())
     {
-        return false;
+        res = str == dynamic_cast<const LeafText *>(&right)->str;
     }
-    else
-    {
-        return str == dynamic_cast<const LeafText *>(&right)->str;
-    }
-}
-
-bool LeafText::operator!=(const NodeText &right) const
-{
-    return !(*this == right);
+    return res;
 }
 
 std::u32string LeafText::toStr() const { return str; }

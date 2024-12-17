@@ -3,29 +3,12 @@
 namespace segment_d1
 {
 
-NodeText::NodeText()
-{
-    // ctor
-}
+NodeText::NodeText() = default;
 
-NodeText::~NodeText()
-{
-    // dtor
-}
+NodeText::~NodeText() = default;
 
-NodeText::NodeText(const NodeText & /*other*/)
-{
-    // copy ctor
-}
+NodeText::NodeText(const NodeText & /*other*/) = default;
 
-NodeText &NodeText::operator=(const NodeText &rhs)
-{
-    if (this == &rhs)
-    {
-        return *this; // handle self assignment
-    }
-    // assignment operator
-    return *this;
-}
+NodeText &NodeText::operator=(const NodeText &rhs) = default;
 
 } // namespace segment_d1

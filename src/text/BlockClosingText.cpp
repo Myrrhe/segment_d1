@@ -9,47 +9,23 @@ BlockClosingText::BlockClosingText() : NodeText()
     // ctor
 }
 
-BlockClosingText::~BlockClosingText()
-{
-    // dtor
-}
+BlockClosingText::~BlockClosingText() = default;
 
-BlockClosingText::BlockClosingText(const BlockClosingText &other)
-    : NodeText(other)
-{
-    // copy ctor
-}
+BlockClosingText::BlockClosingText(const BlockClosingText &other) = default;
 
-BlockClosingText &BlockClosingText::operator=(const BlockClosingText &rhs)
-{
-    if (this == &rhs)
-    {
-        return *this; // handle self assignment
-    }
-    // assignment operator
-    NodeText::operator=(rhs);
-    return *this;
-}
+BlockClosingText &
+BlockClosingText::operator=(const BlockClosingText &rhs) = default;
 
-void BlockClosingText::release() {}
+void BlockClosingText::release()
+{
+    // Nothing to do
+}
 
 NodeText::Type BlockClosingText::getType() const { return Type::BLOCKCLOSING; }
 
-bool BlockClosingText::operator==(const NodeText &right) const
+bool BlockClosingText::isEqual(const NodeText &right) const
 {
-    if (getType() != right.getType())
-    {
-        return false;
-    }
-    else
-    {
-        return true;
-    }
-}
-
-bool BlockClosingText::operator!=(const NodeText &right) const
-{
-    return !(*this == right);
+    return getType() == right.getType();
 }
 
 const std::u32string &BlockClosingText::getStr() const { return EmptyStr32; }

@@ -10,16 +10,9 @@ BlockInfoText::BlockInfoText() : NodeText(), infoText(), useInfo()
     // ctor
 }
 
-BlockInfoText::~BlockInfoText()
-{
-    // dtor
-}
+BlockInfoText::~BlockInfoText() = default;
 
-BlockInfoText::BlockInfoText(const BlockInfoText &other)
-    : NodeText(other), infoText(other.infoText), useInfo(other.useInfo)
-{
-    // copy ctor
-}
+BlockInfoText::BlockInfoText(const BlockInfoText &other) = default;
 
 BlockInfoText::BlockInfoText(const InfoText &newInfoText)
     : NodeText(), infoText(newInfoText), useInfo()
@@ -33,65 +26,52 @@ BlockInfoText::BlockInfoText(const std::u32string &str)
     infoText = InfoText(str);
     useInfo.fill(false);
     std::vector<std::u32string> vecStr = Func::split(str, U',');
-    for (std::size_t i = 0; i < vecStr.size(); ++i)
+    const std::size_t vecStrSize = vecStr.size();
+    for (std::size_t i = 0; i < vecStrSize; ++i)
     {
         std::pair<std::u32string, std::u32string> keyVal =
             Func::getKeyValueLine(vecStr[i]);
         if (keyVal.first == InfoText::Keys32[1])
         {
-            // infoText.setCharSize(std::stoul(keyVal.second, nullptr, 10));
             useInfo[1] = true;
         }
         else if (keyVal.first == InfoText::Keys32[2])
         {
-            // infoText.setLetterSpacing(std::stof(keyVal.second, nullptr));
             useInfo[2] = true;
         }
         else if (keyVal.first == InfoText::Keys32[3])
         {
-            // infoText.setLineSpacing(std::stof(keyVal.second, nullptr));
             useInfo[3] = true;
         }
         else if (keyVal.first == InfoText::Keys32[4])
         {
-            // infoText.setStyle(static_cast<InfoText::Style>(std::stoul(keyVal.second,
-            // nullptr, 10)));
             useInfo[4] = true;
         }
         else if (keyVal.first == InfoText::Keys32[5])
         {
-            // infoText.setFillColor(sf::Color(std::stoul(keyVal.second,
-            // nullptr, 10)));
             useInfo[5] = true;
         }
         else if (keyVal.first == InfoText::Keys32[6])
         {
-            // infoText.setOutlineColor(sf::Color(std::stoul(keyVal.second,
-            // nullptr, 10)));
             useInfo[6] = true;
         }
         else if (keyVal.first == InfoText::Keys32[7])
         {
-            // infoText.setThickness(std::stof(keyVal.second, nullptr));
             useInfo[7] = true;
+        }
+        else
+        {
+            // Nothing to do
         }
     }
 }
 
-BlockInfoText &BlockInfoText::operator=(const BlockInfoText &rhs)
-{
-    if (this == &rhs)
-    {
-        return *this; // handle self assignment
-    }
-    // assignment operator
-    NodeText::operator=(rhs);
-    infoText = rhs.infoText;
-    useInfo = rhs.useInfo;
-    return *this;
-}
+BlockInfoText &BlockInfoText::operator=(const BlockInfoText &rhs) = default;
 
-void BlockInfoText::release() {}
+void BlockInfoText::release()
+{
+    // Nothing to do
+}
 
 NodeText::Type BlockInfoText::getType() const { return Type::BLOCKINFO; }
 
@@ -126,52 +106,54 @@ float32_t BlockInfoText::getThickness() const
     return infoText.getThickness();
 }
 
-bool BlockInfoText::isUsed(uint64_t i) const { return useInfo[i]; }
+bool BlockInfoText::isUsed(const uint64_t i) const { return useInfo[i]; }
 
-bool BlockInfoText::isUsed(InfoText::Info info) const
+bool BlockInfoText::isUsed(const InfoText::Info info) const
 {
+    bool res = false;
     switch (info)
     {
     case InfoText::Info::FONT: {
-        return useInfo[0];
+        res = useInfo[0];
         break;
     }
     case InfoText::Info::CHAR_SIZE: {
-        return useInfo[1];
+        res = useInfo[1];
         break;
     }
     case InfoText::Info::LETTER_SPACING: {
-        return useInfo[2];
+        res = useInfo[2];
         break;
     }
     case InfoText::Info::LINE_SPACING_FACTOR: {
-        return useInfo[3];
+        res = useInfo[3];
         break;
     }
     case InfoText::Info::STYLE: {
-        return useInfo[4];
+        res = useInfo[4];
         break;
     }
     case InfoText::Info::FILL_COLOR: {
-        return useInfo[5];
+        res = useInfo[5];
         break;
     }
     case InfoText::Info::OUTLINE_COLOR: {
-        return useInfo[6];
+        res = useInfo[6];
         break;
     }
     case InfoText::Info::THICKNESS: {
-        return useInfo[7];
+        res = useInfo[7];
         break;
     }
     default: {
-        return false;
+        res = false;
         break;
     }
     }
+    return res;
 }
 
-void BlockInfoText::setUsed(InfoText::Info info, bool newUsed)
+void BlockInfoText::setUsed(const InfoText::Info info, const bool newUsed)
 {
     switch (info)
     {
@@ -219,31 +201,26 @@ bool BlockInfoText::isUseful() const
 {
     bool useful = false;
     for (InfoText::Info i = InfoText::Info::INFO_BEGIN;
-         i < InfoText::Info::NB_INFO; i++)
+         i < InfoText::Info::NB_INFO; ++i)
     {
         useful = useful || isUsed(i);
     }
     return useful;
 }
 
-bool BlockInfoText::operator==(const NodeText &right) const
+bool BlockInfoText::isEqual(const NodeText &right) const
 {
-    if (getType() != right.getType())
+    bool res = false;
+    if (getType() == right.getType())
     {
-        return false;
+        const auto *const rightP = dynamic_cast<const BlockInfoText *>(&right);
+        res = infoText == rightP->infoText;
+        for (uint64_t i = 0; i < 8; ++i)
+        {
+            res = res && (useInfo[i] == rightP->useInfo[i]);
+        }
     }
-    const BlockInfoText *rightP = dynamic_cast<const BlockInfoText *>(&right);
-    bool isEqual = infoText == rightP->infoText;
-    for (uint64_t i = 0; i < 8; i++)
-    {
-        isEqual = isEqual && useInfo[i] == rightP->useInfo[i];
-    }
-    return isEqual;
-}
-
-bool BlockInfoText::operator!=(const NodeText &right) const
-{
-    return !(*this == right);
+    return res;
 }
 
 BlockInfoText &BlockInfoText::operator+=(const BlockInfoText &right)
@@ -299,33 +276,28 @@ BlockInfoText &BlockInfoText::operator+=(const BlockInfoText &right)
     return *this;
 }
 
-BlockInfoText BlockInfoText::operator+(const BlockInfoText &right) const
-{
-    return BlockInfoText(*this) += right;
-}
-
 const std::u32string &BlockInfoText::getStr() const { return EmptyStr32; }
 
 std::u32string BlockInfoText::toStr() const
 {
-    if (!isUseful())
+    std::u32string res = U"";
+    if (isUseful())
     {
-        return U"";
-    }
-    std::u32string res = U"<";
-    for (InfoText::Info i = InfoText::Info::INFO_BEGIN;
-         i < InfoText::Info::NB_INFO; i++)
-    {
-        if (isUsed(i))
+        res = U"<";
+        for (InfoText::Info i = InfoText::Info::INFO_BEGIN;
+            i < InfoText::Info::NB_INFO; ++i)
         {
-            if (res != U"<")
+            if (isUsed(i))
             {
-                res += InfoText::Separator;
+                if (res != U"<")
+                {
+                    res += InfoText::Separator;
+                }
+                res += InfoText::getKeyStr32(i) + U"=" + infoText.getValStr(i);
             }
-            res += InfoText::getKeyStr32(i) + U"=" + infoText.getValStr(i);
         }
+        res += U'>';
     }
-    res += U'>';
     return res;
 }
 

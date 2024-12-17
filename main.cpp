@@ -1,4 +1,5 @@
 #include "Constants.hpp"
+#include "Engine.hpp"
 #include "Func.hpp"
 #include "Global.hpp"
 #include "Input.hpp"
@@ -11,13 +12,17 @@
 #include "StaticObject.hpp"
 #include "TextureManager.hpp"
 #include "Types.hpp"
-#include "Windowmanager.hpp"
+#include "WindowManager.hpp"
+#include "text/ChainText.hpp"
+#include "text/TextComp.hpp"
 #include <SFML/Graphics.hpp>
 #include <iostream>
 
 int main(int /*argc*/, char **argv, char ** /*options*/)
 {
     segment_d1::Logger().info(__cplusplus);
+
+    segment_d1::ChainText cha2(R"(\\\<>)");
 
     segment_d1::OsManager::setPath(argv[0]);
     segment_d1::WindowManager::getMonitorSize();
@@ -46,21 +51,30 @@ int main(int /*argc*/, char **argv, char ** /*options*/)
     sf::CircleShape shape(100.f);
     shape.setFillColor(sf::Color::Green);
 
-    while (segment_d1::WindowManager::isOpen())
-    {
-        sf::Event event;
-        while (segment_d1::WindowManager::pollEvent(event))
-        {
-            if (event.type == sf::Event::Closed)
-            {
-                segment_d1::WindowManager::close();
-            }
-        }
+    // ========================================================================
 
-        segment_d1::WindowManager::clear();
-        segment_d1::WindowManager::draw(shape);
-        segment_d1::WindowManager::display();
-    }
+
+    // segment_d1::TextComp textComp =
+    //     segment_d1::TextComp({segment_d1::ChainText("machin")}, nullptr, 30);
+    // ========================================================================
+
+    segment_d1::Engine::launch();
+
+    // while (segment_d1::WindowManager::isOpen())
+    // {
+    //     sf::Event event;
+    //     while (segment_d1::WindowManager::pollEvent(event))
+    //     {
+    //         if (event.type == sf::Event::Closed)
+    //         {
+    //             segment_d1::WindowManager::close();
+    //         }
+    //     }
+
+    //     segment_d1::WindowManager::clear();
+    //     segment_d1::WindowManager::draw(shape);
+    //     segment_d1::WindowManager::display();
+    // }
 
     return 0;
 }

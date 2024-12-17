@@ -1442,41 +1442,29 @@ Func::utf8ToUtf32(std::string::const_iterator be,
          3, 3, 3, 3, 3, 3, 3, 3, 4, 4, 4, 4, 5, 5, 5, 5}};
     static const std::array<char32_t, 6> offsets = {
         {0x00'00'00'00, 0x00'00'30'80, 0x00'0E'20'80, 0x03'C8'20'80,
-         0xFA'08'20'80, 0x82'08'20'80}};
+         0xFA'08'20'80U, 0x82'08'20'80U}};
     while (be < en)
     {
         char32_t codepoint = 0;
         // decode the character
-        if (const uint8_t trailingBytes = trailing[static_cast<uint8_t>(*be)];
+        if (const uint8_t trailingBytes =
+                trailing[static_cast<uint64_t>(static_cast<uint8_t>(*be))];
             (be + trailingBytes) < en)
         {
-            for (std::size_t i = 0; i <= trailingBytes; ++i)
+            if (trailingBytes <= 5)
             {
-                if (trailingBytes != i)
+                for (uint8_t i = 0; i <= trailingBytes; ++i)
                 {
-                    (codepoint += static_cast<uint8_t>(*be++)) <<= 6;
-                }
-                else
-                {
-                    (codepoint += static_cast<uint8_t>(*be++)) <<= 6;
+                    if (i == trailingBytes)
+                    {
+                        codepoint += static_cast<uint8_t>(*be++);
+                    }
+                    else
+                    {
+                        (codepoint += static_cast<uint8_t>(*be++)) <<= 6;
+                    }
                 }
             }
-            // switch (trailingBytes)
-            // {
-            // case 5:
-            //     (codepoint += static_cast<uint8_t>(*be++)) <<= 6;
-            // case 4:
-            //     (codepoint += static_cast<uint8_t>(*be++)) <<= 6;
-            // case 3:
-            //     (codepoint += static_cast<uint8_t>(*be++)) <<= 6;
-            // case 2:
-            //     (codepoint += static_cast<uint8_t>(*be++)) <<= 6;
-            // case 1:
-            //     (codepoint += static_cast<uint8_t>(*be++)) <<= 6;
-            // case 0:
-            //     codepoint += static_cast<uint8_t>(*be++);
-            // default:;
-            // }
             codepoint -= offsets[trailingBytes];
         }
         else
@@ -1526,35 +1514,23 @@ Func::utf32ToUtf8(std::u32string::const_iterator be,
 
         // Extract the bytes to write
         std::array<uint8_t, 4> bytes;
-        for (std::size_t i = bytestoWrite; i > 0; --i)
+        if (bytestoWrite <= 4)
         {
-            if (1 == i)
+            for (std::size_t i = 1; i <= bytestoWrite; ++i)
             {
-                bytes[i - 1] =
-                    static_cast<uint8_t>(input | firstBytes[bytestoWrite]);
-            }
-            else
-            {
-                bytes[i - 1] = static_cast<uint8_t>((input | 0x80) & 0xBF);
-                input >>= 6;
+                if (i == bytestoWrite)
+                {
+                    bytes[bytestoWrite - i] =
+                        static_cast<uint8_t>(input | firstBytes[bytestoWrite]);
+                }
+                else
+                {
+                    bytes[bytestoWrite - i] =
+                        static_cast<uint8_t>((input | 0x80) & 0xBF);
+                    input >>= 6;
+                }
             }
         }
-        // switch (bytestoWrite)
-        // {
-        // case 4:
-        //     bytes[3] = static_cast<uint8_t>((input | 0x80) & 0xBF);
-        //     input >>= 6;
-        // case 3:
-        //     bytes[2] = static_cast<uint8_t>((input | 0x80) & 0xBF);
-        //     input >>= 6;
-        // case 2:
-        //     bytes[1] = static_cast<uint8_t>((input | 0x80) & 0xBF);
-        //     input >>= 6;
-        // case 1:
-        //     bytes[0] = static_cast<uint8_t>(input |
-        //     firstBytes[bytestoWrite]);
-        // default:;
-        // }
         // Add them to the output
         output = std::copy(bytes.data(), bytes.data() + bytestoWrite, output);
     }

@@ -55,14 +55,10 @@ public:
     };
 
     Text();
-
-    ~Text();
-
     Text(const sf::String &string, const sf::Font &font,
          uint32_t characterSize = 30);
-
     Text(const Text &right);
-
+    ~Text();
     Text &operator=(const Text &rhs);
 
     void setString(const sf::String &string);

@@ -1,6 +1,5 @@
 #include "text/InfoText.hpp"
 #include "Constants.hpp"
-#include "Func.hpp"
 #include <cassert>
 
 namespace segment_d1
@@ -16,44 +15,35 @@ const InfoText InfoText::Default = InfoText();
 
 InfoText::InfoText()
     : font(nullptr), charSize(30), letterSpacing({true, 1.0f}),
-      lineSpacingFactor(1.0f), style(Style::Regular),
-      fillColor(sf::Color(255, 255, 255, 255)),
-      outlineColor(sf::Color(0, 0, 0, 255)), thickness(0)
+      lineSpacingFactor(1.0f), style(Style::REGULAR),
+      fillColor(sf::Color(MaxColor, MaxColor, MaxColor, MaxColor)),
+      outlineColor(sf::Color(0, 0, 0, MaxColor)), thickness(0)
 {
     // ctor
 }
 
-InfoText::~InfoText()
-{
-    // dtor
-}
+InfoText::~InfoText() = default;
 
-InfoText::InfoText(const InfoText &other)
-    : font(other.font), charSize(other.charSize),
-      letterSpacing(other.letterSpacing),
-      lineSpacingFactor(other.lineSpacingFactor), style(other.style),
-      fillColor(other.fillColor), outlineColor(other.outlineColor),
-      thickness(other.thickness)
-{
-    // copy ctor
-}
+InfoText::InfoText(const InfoText &other) = default;
 
-InfoText::InfoText(const sf::Font *newFont, uint64_t newCharSize)
+InfoText::InfoText(const sf::Font *const newFont, const uint64_t newCharSize)
     : font(newFont), charSize(newCharSize), letterSpacing({true, 1.0f}),
-      lineSpacingFactor(1.0f), style(Style::Regular),
-      fillColor(sf::Color(255, 255, 255, 255)),
-      outlineColor(sf::Color(0, 0, 0, 255)), thickness(0)
+      lineSpacingFactor(1.0f), style(Style::REGULAR),
+      fillColor(sf::Color(MaxColor, MaxColor, MaxColor, MaxColor)),
+      outlineColor(sf::Color(0, 0, 0, MaxColor)), thickness(0)
 {
 }
 
 InfoText::InfoText(const std::u32string &str)
     : font(nullptr), charSize(30), letterSpacing({true, 1.0f}),
-      lineSpacingFactor(1.0f), style(Style::Regular),
-      fillColor(sf::Color(255, 255, 255, 255)),
-      outlineColor(sf::Color(255, 255, 255, 255)), thickness(0)
+      lineSpacingFactor(1.0f), style(Style::REGULAR),
+      fillColor(sf::Color(MaxColor, MaxColor, MaxColor, MaxColor)),
+      outlineColor(sf::Color(MaxColor, MaxColor, MaxColor, MaxColor)),
+      thickness(0)
 {
     std::vector<std::u32string> vecStr = Func::split(str, Separator);
-    for (std::size_t i = 0; i < vecStr.size(); i++)
+    const std::size_t vecStrSize = vecStr.size();
+    for (std::size_t i = 0; i < vecStrSize; ++i)
     {
         std::pair<std::u32string, std::u32string> keyVal =
             Func::getKeyValueLine(vecStr[i]);
@@ -96,30 +86,21 @@ InfoText::InfoText(const std::u32string &str)
         {
             thickness = Func::str32ToF(keyVal.second);
         }
+        else
+        {
+            // Nothing to do
+        }
     }
 }
 
-InfoText &InfoText::operator=(const InfoText &rhs)
+InfoText &InfoText::operator=(const InfoText &rhs) = default;
+
+void InfoText::setFont(const sf::Font *const newFont) { font = newFont; }
+
+void InfoText::setCharSize(const uint64_t newCharSize)
 {
-    if (this == &rhs)
-    {
-        return *this; // handle self assignment
-    }
-    font = rhs.font;
-    charSize = rhs.charSize;
-    letterSpacing = rhs.letterSpacing;
-    lineSpacingFactor = rhs.lineSpacingFactor;
-    style = rhs.style;
-    fillColor = rhs.fillColor;
-    outlineColor = rhs.outlineColor;
-    thickness = rhs.thickness;
-    // assignment operator
-    return *this;
+    charSize = newCharSize;
 }
-
-void InfoText::setFont(const sf::Font *newFont) { font = newFont; }
-
-void InfoText::setCharSize(uint64_t newCharSize) { charSize = newCharSize; }
 
 void InfoText::setLetterSpacing(
     const std::tuple<bool, float32_t> &newLetterSpacing)
@@ -127,24 +108,24 @@ void InfoText::setLetterSpacing(
     letterSpacing = newLetterSpacing;
 }
 
-void InfoText::setLineSpacingFactor(float32_t newLineSpacingFactor)
+void InfoText::setLineSpacingFactor(const float32_t newLineSpacingFactor)
 {
     lineSpacingFactor = newLineSpacingFactor;
 }
 
-void InfoText::setStyle(Style newStyle) { style = newStyle; }
+void InfoText::setStyle(const Style newStyle) { style = newStyle; }
 
-void InfoText::setFillColor(sf::Color newFillColor)
+void InfoText::setFillColor(const sf::Color newFillColor)
 {
     fillColor = newFillColor;
 }
 
-void InfoText::setOutlineColor(sf::Color newOutlineColor)
+void InfoText::setOutlineColor(const sf::Color newOutlineColor)
 {
     outlineColor = newOutlineColor;
 }
 
-void InfoText::setThickness(float32_t newThickness)
+void InfoText::setThickness(const float32_t newThickness)
 {
     thickness = newThickness;
 }
@@ -279,25 +260,7 @@ void InfoText::setInfo<InfoText::Info::THICKNESS>(
     thickness = t;
 }
 
-bool InfoText::operator==(const InfoText &right) const
-{
-    return font == right.font && charSize == right.charSize &&
-           std::get<0>(letterSpacing) == std::get<0>(right.letterSpacing) &&
-           std::abs(std::get<1>(letterSpacing) -
-                    std::get<1>(right.letterSpacing)) < Func::m_epsilon_f &&
-           std::abs(lineSpacingFactor - right.lineSpacingFactor) <
-               Func::m_epsilon_f &&
-           style == right.style && fillColor == right.fillColor &&
-           outlineColor == right.outlineColor &&
-           std::abs(thickness - right.thickness) < Func::m_epsilon_f;
-}
-
-bool InfoText::operator!=(const InfoText &right) const
-{
-    return !(*this == right);
-}
-
-std::u32string InfoText::getValStr(Info i) const
+std::u32string InfoText::getValStr(const Info i) const
 {
     std::u32string res = U"";
     switch (i)
@@ -345,54 +308,62 @@ std::u32string InfoText::getValStr(Info i) const
     return res;
 }
 
-const std::u32string &InfoText::getKeyStr32(Info i)
+const std::u32string &InfoText::getKeyStr32(const Info i)
 {
+    const std::u32string* res = &EmptyStr32;
     switch (i)
     {
     case Info::FONT: {
-        return Keys32[0];
+        res = &Keys32[0];
         break;
     }
     case Info::CHAR_SIZE: {
-        return Keys32[1];
+        res = &Keys32[1];
         break;
     }
     case Info::LETTER_SPACING: {
-        return Keys32[2];
+        res = &Keys32[2];
         break;
     }
     case Info::LINE_SPACING_FACTOR: {
-        return Keys32[3];
+        res = &Keys32[3];
         break;
     }
     case Info::STYLE: {
-        return Keys32[4];
+        res = &Keys32[4];
         break;
     }
     case Info::FILL_COLOR: {
-        return Keys32[5];
+        res = &Keys32[5];
         break;
     }
     case Info::OUTLINE_COLOR: {
-        return Keys32[6];
+        res = &Keys32[6];
         break;
     }
     case Info::THICKNESS: {
-        return Keys32[7];
+        res = &Keys32[7];
         break;
     }
     default: {
-        return EmptyStr32;
+        res = &EmptyStr32;
         break;
     }
     }
+    return *res;
 }
 
-InfoText::Info operator++(InfoText::Info &i, int)
+InfoText::Info operator++(InfoText::Info &i, const int32_t)
 {
     assert(i != InfoText::Info::NB_INFO);
     i = static_cast<InfoText::Info>(static_cast<uint64_t>(i) + 1);
     return static_cast<InfoText::Info>(static_cast<uint64_t>(i) - 1);
+}
+
+InfoText::Info &operator++(InfoText::Info &i)
+{
+    assert(i != InfoText::Info::NB_INFO);
+    return i = static_cast<InfoText::Info>(static_cast<uint64_t>(i) + 1);
 }
 
 uint64_t operator|(const InfoText::Style &left, const InfoText::Style &right)
@@ -400,7 +371,7 @@ uint64_t operator|(const InfoText::Style &left, const InfoText::Style &right)
     return static_cast<uint32_t>(left) | static_cast<uint32_t>(right);
 }
 
-uint64_t operator|(uint64_t left, const InfoText::Style &right)
+uint64_t operator|(const uint64_t left, const InfoText::Style &right)
 {
     return left | static_cast<uint32_t>(right);
 }
@@ -410,7 +381,7 @@ uint64_t operator&(const InfoText::Style &left, const InfoText::Style &right)
     return static_cast<uint32_t>(left) & static_cast<uint32_t>(right);
 }
 
-std::ostream &operator<<(std::ostream &os, InfoText::Style right)
+std::ostream &operator<<(std::ostream &os, const InfoText::Style right)
 {
     return os << static_cast<uint64_t>(right);
 }

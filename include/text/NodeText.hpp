@@ -37,13 +37,12 @@ public:
 
     virtual const std::u32string &getStr() const = 0;
 
-    virtual bool operator==(const NodeText &right) const = 0;
-    virtual bool operator!=(const NodeText &right) const = 0;
+    // virtual bool operator==(const NodeText &right) const = 0;
+    // virtual bool operator!=(const NodeText &right) const = 0;
+
+    virtual bool isEqual(const NodeText &right) const = 0;
 
     virtual std::u32string toStr() const = 0;
-
-protected:
-private:
 };
 
 } // namespace segment_d1
