@@ -17,28 +17,19 @@
  *
  */
 
-#ifndef SHADERMANAGER_HPP
-#define SHADERMANAGER_HPP
-#include "StaticObject.hpp"
-#include <SFML/Graphics.hpp>
+#include "menu/MenuState.hpp"
 
 namespace segment_d1
 {
 
-/** \class ShaderManager
-    \brief The engine of the software.
-*/
-class ShaderManager final : public StaticObject
-{
-public:
-    static void initialize();
-    static void terminate();
+MenuState::MenuState() : m_id(0) {}
 
-    static sf::Shader& getShader(const std::string& key);
-private:
-    static std::map<std::string, sf::Shader, std::less<>> shaders;
-};
+MenuState::MenuState(const uint64_t id) : m_id(id) {}
+
+MenuState::MenuState(const MenuState &menuState) noexcept = default;
+
+MenuState &MenuState::operator=(const MenuState &menuState) = default;
+
+MenuState::~MenuState() = default;
 
 } // namespace segment_d1
-
-#endif // SHADERMANAGER_HPP

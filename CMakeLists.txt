@@ -61,3 +61,6 @@ target_link_libraries(main pthread)
 
 # Tell C++ compiler to use C++20 features. We don't actually use any of them.
 # target_compile_features(main PUBLIC cxx_std_20)
+
+file(REMOVE_RECURSE "${CMAKE_BINARY_DIR}/assets")
+file(COPY assets DESTINATION ${CMAKE_BINARY_DIR})

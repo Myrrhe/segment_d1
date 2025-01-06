@@ -71,7 +71,7 @@ public:
 
     template <Info typeCode> typename Typer<typeCode>::Type getInfo() const;
 
-    template <Info typeCode> void setInfo(typename Typer<typeCode>::Type t);
+    template <Info typeCode> void setInfo(typename Typer<typeCode>::Type const t);
 
     std::u32string getValStr(const Info i) const;
 

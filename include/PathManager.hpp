@@ -34,6 +34,9 @@ public:
         ROOT,
         DAT,
         IMG,
+        SHADER,
+        SHADER_FRAG,
+        SHADER_VERT,
         SOUND,
         FONT,
         SCREENSHOT,
@@ -50,6 +53,9 @@ public:
 
     static const std::string FolderDat;
     static const std::string FolderImg;
+    static const std::string FolderShader;
+    static const std::string FolderFragShader;
+    static const std::string FolderVertShader;
     static const std::string FolderSound;
     static const std::string FolderFont;
     static const std::string FolderScreenshot;

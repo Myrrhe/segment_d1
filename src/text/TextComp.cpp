@@ -46,24 +46,27 @@ void TextComp::addLine(std::vector<sf::Vertex> &vertices,
         std::floor(((lineTop + offset) - (thickness / 2)) + 0.5f);
     const float32_t bottom = top + std::floor(thickness + 0.5f);
 
-    vertices.emplace_back(
+    (void)vertices.emplace_back(
         sf::Vector2<float32_t>(-outlineThickness, top - outlineThickness),
         color, sf::Vector2<float32_t>(1, 1));
-    vertices.emplace_back(sf::Vector2<float32_t>(lineLength + outlineThickness,
-                                                 top - outlineThickness),
-                          color, sf::Vector2<float32_t>(1, 1));
-    vertices.emplace_back(
+    (void)vertices.emplace_back(
+        sf::Vector2<float32_t>(lineLength + outlineThickness,
+                               top - outlineThickness),
+        color, sf::Vector2<float32_t>(1, 1));
+    (void)vertices.emplace_back(
         sf::Vector2<float32_t>(-outlineThickness, bottom + outlineThickness),
         color, sf::Vector2<float32_t>(1, 1));
-    vertices.emplace_back(
+    (void)vertices.emplace_back(
         sf::Vector2<float32_t>(-outlineThickness, bottom + outlineThickness),
         color, sf::Vector2<float32_t>(1, 1));
-    vertices.emplace_back(sf::Vector2<float32_t>(lineLength + outlineThickness,
-                                                 top - outlineThickness),
-                          color, sf::Vector2<float32_t>(1, 1));
-    vertices.emplace_back(sf::Vector2<float32_t>(lineLength + outlineThickness,
-                                                 bottom + outlineThickness),
-                          color, sf::Vector2<float32_t>(1, 1));
+    (void)vertices.emplace_back(
+        sf::Vector2<float32_t>(lineLength + outlineThickness,
+                               top - outlineThickness),
+        color, sf::Vector2<float32_t>(1, 1));
+    (void)vertices.emplace_back(
+        sf::Vector2<float32_t>(lineLength + outlineThickness,
+                               bottom + outlineThickness),
+        color, sf::Vector2<float32_t>(1, 1));
 }
 
 void TextComp::addLinePart(std::vector<sf::Vertex> &vertices,
@@ -76,24 +79,27 @@ void TextComp::addLinePart(std::vector<sf::Vertex> &vertices,
         std::floor(((lineTop + offset) - (thickness / 2)) + 0.5f);
     const float32_t bottom = top + std::floor(thickness + 0.5f);
 
-    vertices.emplace_back(sf::Vector2<float32_t>(xInit - outlineThickness,
-                                                 top - outlineThickness),
-                          color, sf::Vector2<float32_t>(1, 1));
-    vertices.emplace_back(sf::Vector2<float32_t>(xFina + outlineThickness,
-                                                 top - outlineThickness),
-                          color, sf::Vector2<float32_t>(1, 1));
-    vertices.emplace_back(sf::Vector2<float32_t>(xInit - outlineThickness,
-                                                 bottom + outlineThickness),
-                          color, sf::Vector2<float32_t>(1, 1));
-    vertices.emplace_back(sf::Vector2<float32_t>(xInit - outlineThickness,
-                                                 bottom + outlineThickness),
-                          color, sf::Vector2<float32_t>(1, 1));
-    vertices.emplace_back(sf::Vector2<float32_t>(xFina + outlineThickness,
-                                                 top - outlineThickness),
-                          color, sf::Vector2<float32_t>(1, 1));
-    vertices.emplace_back(sf::Vector2<float32_t>(xFina + outlineThickness,
-                                                 bottom + outlineThickness),
-                          color, sf::Vector2<float32_t>(1, 1));
+    (void)vertices.emplace_back(sf::Vector2<float32_t>(xInit - outlineThickness,
+                                                       top - outlineThickness),
+                                color, sf::Vector2<float32_t>(1, 1));
+    (void)vertices.emplace_back(sf::Vector2<float32_t>(xFina + outlineThickness,
+                                                       top - outlineThickness),
+                                color, sf::Vector2<float32_t>(1, 1));
+    (void)vertices.emplace_back(
+        sf::Vector2<float32_t>(xInit - outlineThickness,
+                               bottom + outlineThickness),
+        color, sf::Vector2<float32_t>(1, 1));
+    (void)vertices.emplace_back(
+        sf::Vector2<float32_t>(xInit - outlineThickness,
+                               bottom + outlineThickness),
+        color, sf::Vector2<float32_t>(1, 1));
+    (void)vertices.emplace_back(sf::Vector2<float32_t>(xFina + outlineThickness,
+                                                       top - outlineThickness),
+                                color, sf::Vector2<float32_t>(1, 1));
+    (void)vertices.emplace_back(
+        sf::Vector2<float32_t>(xFina + outlineThickness,
+                               bottom + outlineThickness),
+        color, sf::Vector2<float32_t>(1, 1));
 }
 
 // Add a glyph quad to the vertex array
@@ -121,32 +127,32 @@ void TextComp::addGlyphQuad(std::vector<sf::Vertex> &vertices,
                                                 glyph.textureRect.height) +
                          padding;
 
-    vertices.emplace_back(
+    (void)vertices.emplace_back(
         sf::Vector2<float32_t>(((position.x + left) - (italicShear * top)) -
                                    outlineThickness,
                                (position.y + top) - outlineThickness),
         color, sf::Vector2<float32_t>(u1, v1));
-    vertices.emplace_back(
+    (void)vertices.emplace_back(
         sf::Vector2<float32_t>(((position.x + right) - (italicShear * top)) -
                                    outlineThickness,
                                (position.y + top) - outlineThickness),
         color, sf::Vector2<float32_t>(u2, v1));
-    vertices.emplace_back(
+    (void)vertices.emplace_back(
         sf::Vector2<float32_t>(((position.x + left) - (italicShear * bottom)) -
                                    outlineThickness,
                                (position.y + bottom) - outlineThickness),
         color, sf::Vector2<float32_t>(u1, v2));
-    vertices.emplace_back(
+    (void)vertices.emplace_back(
         sf::Vector2<float32_t>(((position.x + left) - (italicShear * bottom)) -
                                    outlineThickness,
                                (position.y + bottom) - outlineThickness),
         color, sf::Vector2<float32_t>(u1, v2));
-    vertices.emplace_back(
+    (void)vertices.emplace_back(
         sf::Vector2<float32_t>(((position.x + right) - (italicShear * top)) -
                                    outlineThickness,
                                (position.y + top) - outlineThickness),
         color, sf::Vector2<float32_t>(u2, v1));
-    vertices.emplace_back(
+    (void)vertices.emplace_back(
         sf::Vector2<float32_t>(((position.x + right) - (italicShear * bottom)) -
                                    outlineThickness,
                                (position.y + bottom) - outlineThickness),
@@ -154,64 +160,18 @@ void TextComp::addGlyphQuad(std::vector<sf::Vertex> &vertices,
 }
 
 TextComp::TextComp()
-    : sf::Drawable(), sf::Transformable(), m_chainText(),
-      // m_string             (),
-      m_infoText(), m_fontsSizes({}), m_widthWrap(-1.0f),
-      /*
-      m_font               (nullptr),
-      m_characterSize      (30),
-      m_letterSpacingFactor(1.f),
-      m_lineSpacingFactor  (1.f),
-      m_style              (InfoText::Style::Regular),
-      m_fillColor          (255, 255, 255),
-      m_outlineColor       (0, 0, 0),
-      m_outlineThickness   (0),
-      */
-      m_vertices(), m_outlineVertices(), m_bounds(),
-      m_geometryNeedUpdate(false), m_fontTextureId(0)
+    : sf::Drawable(), sf::Transformable(), m_chainText(), m_infoText(),
+      m_fontsSizes({}), m_widthWrap(-1.0f), m_vertices(), m_outlineVertices(),
+      m_bounds(), m_geometryNeedUpdate(false), m_fontTextureId(0)
 {
 }
 
 TextComp::~TextComp() = default;
-/*
-TextComp::TextComp(const std::u32string& string, const sf::Font& font, uint32_t
-characterSize) : sf::Drawable(), sf::Transformable(), m_chainText({string}),
-//m_string             (string),
-m_infoText(&font, characterSize),
-m_fontsSizes({}),
-m_widthWrap(-1.0f),
-//m_font               (&font),
-//m_characterSize      (characterSize),
-//m_letterSpacingFactor(1.f),
-//m_lineSpacingFactor  (1.f),
-//m_style              (InfoText::Style::Regular),
-//m_fillColor          (255, 255, 255),
-//m_outlineColor       (0, 0, 0),
-//m_outlineThickness   (0),
-m_vertices           (sf::PrimitiveType::Triangles),
-m_outlineVertices    (sf::PrimitiveType::Triangles),
-m_bounds             (),
-m_geometryNeedUpdate (true),
-m_fontTextureId      (0)
-{
 
-}
-*/
 TextComp::TextComp(const std::vector<const ChainText *> &chainText,
                    const sf::Font &font, const uint32_t characterSize)
     : sf::Drawable(), sf::Transformable(), m_chainText(chainText),
-      // m_string             (string),
       m_infoText(&font, characterSize), m_fontsSizes({}), m_widthWrap(-1.0f),
-      /*
-      m_font               (&font),
-      m_characterSize      (characterSize),
-      m_letterSpacingFactor(1.f),
-      m_lineSpacingFactor  (1.f),
-      m_style              (InfoText::Style::Regular),
-      m_fillColor          (255, 255, 255),
-      m_outlineColor       (0, 0, 0),
-      m_outlineThickness   (0),
-      */
       m_vertices(sf::PrimitiveType::Triangles),
       m_outlineVertices(sf::PrimitiveType::Triangles), m_bounds(),
       m_geometryNeedUpdate(true), m_fontTextureId(0)
@@ -221,17 +181,7 @@ TextComp::TextComp(const std::vector<const ChainText *> &chainText,
 TextComp::TextComp(const TextComp &right) = default;
 
 TextComp &TextComp::operator=(const TextComp &rhs) = default;
-/*
-void TextComp::setString(const std::u32string& string)
-{
-    ChainText newChain = string;
-    if (newChain != m_chainText)
-    {
-        m_chainText = newChain;
-        m_geometryNeedUpdate = true;
-    }
-}
-*/
+
 void TextComp::setFont(const sf::Font &font)
 {
     if (m_infoText.getInfo<InfoText::Info::FONT>() != &font)
@@ -252,18 +202,18 @@ void TextComp::setCharacterSize(const uint32_t size)
 
 void TextComp::setLetterSpacing(bool spacingFixed, float32_t spacing)
 {
-    if (spacingFixed !=
-            std::get<0>(m_infoText.getInfo<InfoText::Info::LETTER_SPACING>()) ||
-        std::abs(
-            std::get<1>(m_infoText.getInfo<InfoText::Info::LETTER_SPACING>()) -
-            spacing) > Func::m_epsilon_f)
+    if ((spacingFixed !=
+         std::get<0>(m_infoText.getInfo<InfoText::Info::LETTER_SPACING>())) ||
+        (std::abs(
+             std::get<1>(m_infoText.getInfo<InfoText::Info::LETTER_SPACING>()) -
+             spacing) > Func::m_epsilon_f))
     {
         m_infoText.setInfo<InfoText::Info::LETTER_SPACING>(
             {spacingFixed, spacing});
     }
 }
 
-void TextComp::setLineSpacing(float32_t spacingFactor)
+void TextComp::setLineSpacing(const float32_t spacingFactor)
 {
     if (std::abs(m_infoText.getInfo<InfoText::Info::LINE_SPACING_FACTOR>() -
                  spacingFactor) > Func::m_epsilon_f)
@@ -341,7 +291,7 @@ void TextComp::setOutlineThickness(const float32_t thickness)
     }
 }
 
-void TextComp::setWidthWrap(float32_t widthWrap)
+void TextComp::setWidthWrap(const float32_t widthWrap)
 {
     if (std::abs(m_widthWrap - widthWrap) > Func::m_epsilon_f)
     {
@@ -399,178 +349,182 @@ float32_t TextComp::getWidthWrap() const { return m_widthWrap; }
 
 sf::Vector2<float32_t> TextComp::findCharacterPos(std::size_t index) const
 {
+    auto position = sf::Vector2<float32_t>();
+
     // Make sure that we have a valid font
-    if (!m_infoText.getInfo<InfoText::Info::FONT>())
+    if (nullptr != m_infoText.getInfo<InfoText::Info::FONT>())
     {
-        return sf::Vector2<float32_t>();
-    }
-
-    std::size_t nbCharTotal = 0;
-    const std::size_t chainTextSize = m_chainText.size();
-    for (std::size_t i = 0; i < chainTextSize; ++i)
-    {
-        nbCharTotal += m_chainText[i]->getNbChar();
-    }
-
-    // Adjust the index if it's out of range
-    if (index > nbCharTotal)
-    {
-        index = nbCharTotal;
-    }
-
-    // Precompute the variables needed by the algorithm
-    /*
-    bool  isBold          = m_infoText.getInfo<InfoText::Info::STYLE>() &
-    InfoText::Style::Bold; float32_t whitespaceWidth =
-    m_infoText.getInfo<InfoText::Info::FONT>()->getGlyph(' ',
-    m_infoText.getInfo<InfoText::Info::CHAR_SIZE>(), isBold).advance; float32_t
-    letterSpacing   = ( whitespaceWidth / 3.f ) * (
-    m_infoText.getInfo<InfoText::Info::LETTER_SPACING>() - 1.f );
-    whitespaceWidth      += letterSpacing;
-    float32_t lineSpacing     =
-    m_infoText.getInfo<InfoText::Info::FONT>()->getLineSpacing(m_infoText.getInfo<InfoText::Info::CHAR_SIZE>())
-    * m_infoText.getInfo<InfoText::Info::LINE_SPACING>();
-    */
-    // Compute the position
-    sf::Vector2<float32_t> position;
-    char32_t prevChar = 0;
-    uint64_t indexNode = 0;
-    std::size_t iInit = 0;
-    std::vector<const BlockInfoText *> vecInfo = {};
-    auto curInfo = BlockInfoText(m_infoText);
-    std::size_t indexChain = 0;
-    for (std::size_t i = 0; i < index; ++i)
-    {
-        bool changeInfo = false;
-        while ((i - iInit) >= m_chainText[indexChain]->getNbChar(indexNode))
+        std::size_t nbCharTotal = 0;
+        const std::size_t chainTextSize = m_chainText.size();
+        for (std::size_t i = 0; i < chainTextSize; ++i)
         {
-            iInit = i;
-            if ((*m_chainText[indexChain])[indexNode]->getType() ==
-                NodeText::Type::BLOCKINFO)
-            {
-                vecInfo.emplace_back(dynamic_cast<const BlockInfoText *>(
-                    (*m_chainText[indexChain])[indexNode]));
-            }
-            else if ((*m_chainText[indexChain])[indexNode]->getType() ==
-                     NodeText::Type::BLOCKCLOSING)
-            {
-                vecInfo.pop_back();
-            }
-            else
-            {
-                // Nothing to do
-            }
-            changeInfo = true;
-            ++indexNode;
-            while (indexNode >= m_chainText[indexChain]->getSize())
-            {
-                ++indexChain;
-                indexNode = 0;
-            }
-        }
-        if (changeInfo)
-        {
-            curInfo = BlockInfoText(m_infoText);
-            const std::size_t vecInfoSize = vecInfo.size();
-            for (std::size_t j = 0; j < vecInfoSize; ++j)
-            {
-                curInfo += *vecInfo[j];
-            }
+            nbCharTotal += m_chainText[i]->getNbChar();
         }
 
-        const char32_t curChar = static_cast<uint32_t>(
-            (*m_chainText[indexChain])[indexNode]->getStr()[i - iInit]);
+        // Adjust the index if it's out of range
+        if (index > nbCharTotal)
+        {
+            index = nbCharTotal;
+        }
 
-        const bool curBold =
-            curInfo.getInfoText().getInfo<InfoText::Info::STYLE>() &
-            InfoText::Style::BOLD;
-        float32_t curWhitespaceWidth =
-            curInfo.getInfoText()
-                .getInfo<InfoText::Info::FONT>()
-                ->getGlyph(' ',
-                           static_cast<uint32_t>(
-                               curInfo.getInfoText()
-                                   .getInfo<InfoText::Info::CHAR_SIZE>()),
-                           curBold)
-                .advance;
-        const float32_t curLetterSpacing =
-            (curWhitespaceWidth / 3.f) *
-            (std::get<1>(curInfo.getInfoText()
-                             .getInfo<InfoText::Info::LETTER_SPACING>()) -
-             1.f);
-        curWhitespaceWidth += curLetterSpacing;
-        const float32_t curLineSpacing =
-            curInfo.getInfoText()
-                .getInfo<InfoText::Info::FONT>()
-                ->getLineSpacing(static_cast<uint32_t>(
-                    curInfo.getInfoText()
-                        .getInfo<InfoText::Info::CHAR_SIZE>())) *
-            curInfo.getInfoText()
-                .getInfo<InfoText::Info::LINE_SPACING_FACTOR>();
-
+        // Precompute the variables needed by the algorithm
         /*
-        for (std::size_t j = 0; j < vecInfo.size(); j++)
-        {
-            if (vecInfo[vecInfo.size() - 1 - j]->isUsed(InfoText::Info::STYLE))
-            {
-                curBold = vecInfo[vecInfo.size() - 1 -
-        j]->getInfoText().getInfo<InfoText::Info::STYLE>() &
-        InfoText::Style::Bold; break;
-            }
-        }
+        bool  isBold          = m_infoText.getInfo<InfoText::Info::STYLE>() &
+        InfoText::Style::Bold; float32_t whitespaceWidth =
+        m_infoText.getInfo<InfoText::Info::FONT>()->getGlyph(' ',
+        m_infoText.getInfo<InfoText::Info::CHAR_SIZE>(), isBold).advance;
+        float32_t letterSpacing   = ( whitespaceWidth / 3.f ) * (
+        m_infoText.getInfo<InfoText::Info::LETTER_SPACING>() - 1.f );
+        whitespaceWidth      += letterSpacing;
+        float32_t lineSpacing     =
+        m_infoText.getInfo<InfoText::Info::FONT>()->getLineSpacing(m_infoText.getInfo<InfoText::Info::CHAR_SIZE>())
+        * m_infoText.getInfo<InfoText::Info::LINE_SPACING>();
         */
-
-        // Apply the kerning offset
-        position.x +=
-            curInfo.getInfoText().getInfo<InfoText::Info::FONT>()->getKerning(
-                prevChar, curChar,
-                static_cast<uint32_t>(
-                    curInfo.getInfoText()
-                        .getInfo<InfoText::Info::CHAR_SIZE>()));
-        prevChar = curChar;
-
-        // Handle special characters
-        switch (curChar)
+        // Compute the position
+        char32_t prevChar = 0;
+        uint64_t indexNode = 0;
+        std::size_t iInit = 0;
+        std::vector<const BlockInfoText *> vecInfo = {};
+        auto curInfo = BlockInfoText(m_infoText);
+        std::size_t indexChain = 0;
+        for (std::size_t i = 0; i < index; ++i)
         {
-        case U' ':
-            position.x += curWhitespaceWidth;
-            continue;
-        case U'\t':
-            position.x += curWhitespaceWidth * 4;
-            continue;
-        case U'\n':
-            position.y += curLineSpacing;
-            position.x = 0;
-            continue;
-        default:
-            break;
-        }
+            bool changeInfo = false;
+            while ((i - iInit) >= m_chainText[indexChain]->getNbChar(indexNode))
+            {
+                iInit = i;
+                if ((*m_chainText[indexChain])[indexNode]->getType() ==
+                    NodeText::Type::BLOCKINFO)
+                {
+                    (void)vecInfo.emplace_back(
+                        dynamic_cast<const BlockInfoText *>(
+                            (*m_chainText[indexChain])[indexNode]));
+                }
+                else if ((*m_chainText[indexChain])[indexNode]->getType() ==
+                         NodeText::Type::BLOCKCLOSING)
+                {
+                    vecInfo.pop_back();
+                }
+                else
+                {
+                    // Nothing to do
+                }
+                changeInfo = true;
+                ++indexNode;
+                while (indexNode >= m_chainText[indexChain]->getSize())
+                {
+                    ++indexChain;
+                    indexNode = 0;
+                }
+            }
+            if (changeInfo)
+            {
+                curInfo = BlockInfoText(m_infoText);
+                const std::size_t vecInfoSize = vecInfo.size();
+                for (std::size_t j = 0; j < vecInfoSize; ++j)
+                {
+                    curInfo += *vecInfo[j];
+                }
+            }
 
-        // For regular characters, add the advance offset of the glyph
-        if (!std::get<0>(curInfo.getInfoText()
-                             .getInfo<InfoText::Info::LETTER_SPACING>()))
-        {
-            position.x +=
-                std::get<1>(curInfo.getInfoText()
-                                .getInfo<InfoText::Info::LETTER_SPACING>());
-        }
-        else
-        {
-            position.x +=
+            const char32_t curChar = static_cast<uint32_t>(
+                (*m_chainText[indexChain])[indexNode]->getStr()[i - iInit]);
+
+            const bool curBold =
+                curInfo.getInfoText().getInfo<InfoText::Info::STYLE>() &
+                InfoText::Style::BOLD;
+            float32_t curWhitespaceWidth =
                 curInfo.getInfoText()
                     .getInfo<InfoText::Info::FONT>()
-                    ->getGlyph(curChar,
+                    ->getGlyph(' ',
                                static_cast<uint32_t>(
                                    curInfo.getInfoText()
                                        .getInfo<InfoText::Info::CHAR_SIZE>()),
                                curBold)
-                    .advance +
-                curLetterSpacing;
-        }
-    }
+                    .advance;
+            const float32_t curLetterSpacing =
+                (curWhitespaceWidth / 3.f) *
+                (std::get<1>(curInfo.getInfoText()
+                                 .getInfo<InfoText::Info::LETTER_SPACING>()) -
+                 1.f);
+            curWhitespaceWidth += curLetterSpacing;
+            const float32_t curLineSpacing =
+                curInfo.getInfoText()
+                    .getInfo<InfoText::Info::FONT>()
+                    ->getLineSpacing(static_cast<uint32_t>(
+                        curInfo.getInfoText()
+                            .getInfo<InfoText::Info::CHAR_SIZE>())) *
+                curInfo.getInfoText()
+                    .getInfo<InfoText::Info::LINE_SPACING_FACTOR>();
 
-    // Transform the position to global coordinates
-    position = getTransform().transformPoint(position);
+            /*
+            for (std::size_t j = 0; j < vecInfo.size(); j++)
+            {
+                if (vecInfo[vecInfo.size() - 1 -
+            j]->isUsed(InfoText::Info::STYLE))
+                {
+                    curBold = vecInfo[vecInfo.size() - 1 -
+            j]->getInfoText().getInfo<InfoText::Info::STYLE>() &
+            InfoText::Style::Bold; break;
+                }
+            }
+            */
+
+            // Apply the kerning offset
+            position.x +=
+                curInfo.getInfoText()
+                    .getInfo<InfoText::Info::FONT>()
+                    ->getKerning(
+                        prevChar, curChar,
+                        static_cast<uint32_t>(
+                            curInfo.getInfoText()
+                                .getInfo<InfoText::Info::CHAR_SIZE>()));
+            prevChar = curChar;
+
+            // Handle special characters
+            switch (curChar)
+            {
+            case U' ':
+                position.x += curWhitespaceWidth;
+                continue;
+            case U'\t':
+                position.x += curWhitespaceWidth * 4;
+                continue;
+            case U'\n':
+                position.y += curLineSpacing;
+                position.x = 0;
+                continue;
+            default:
+                break;
+            }
+
+            // For regular characters, add the advance offset of the glyph
+            if (!std::get<0>(curInfo.getInfoText()
+                                 .getInfo<InfoText::Info::LETTER_SPACING>()))
+            {
+                position.x +=
+                    std::get<1>(curInfo.getInfoText()
+                                    .getInfo<InfoText::Info::LETTER_SPACING>());
+            }
+            else
+            {
+                position.x +=
+                    curInfo.getInfoText()
+                        .getInfo<InfoText::Info::FONT>()
+                        ->getGlyph(
+                            curChar,
+                            static_cast<uint32_t>(
+                                curInfo.getInfoText()
+                                    .getInfo<InfoText::Info::CHAR_SIZE>()),
+                            curBold)
+                        .advance +
+                    curLetterSpacing;
+            }
+        }
+
+        // Transform the position to global coordinates
+        position = getTransform().transformPoint(position);
+    }
 
     return position;
 }
@@ -729,19 +683,23 @@ void TextComp::ensureGeometryUpdate() const
     for (std::size_t i = 0; i < /*m_string.getSize()*/ nbCharTotal; ++i)
     {
         bool changeInfo = false;
-        while (i - iInit >= m_chainText[indexChain]->getNbChar(indexNode))
+        while ((i - iInit) >= m_chainText[indexChain]->getNbChar(indexNode))
         {
             iInit = i;
             if ((*m_chainText[indexChain])[indexNode]->getType() ==
                 NodeText::Type::BLOCKINFO)
             {
-                vecInfo.emplace_back(dynamic_cast<const BlockInfoText *>(
+                (void)vecInfo.emplace_back(dynamic_cast<const BlockInfoText *>(
                     (*m_chainText[indexChain])[indexNode]));
             }
             else if ((*m_chainText[indexChain])[indexNode]->getType() ==
                      NodeText::Type::BLOCKCLOSING)
             {
                 vecInfo.pop_back();
+            }
+            else
+            {
+                // Nothing to do
             }
             changeInfo = true;
             ++indexNode;
@@ -771,8 +729,10 @@ void TextComp::ensureGeometryUpdate() const
                 curFont = std::get<0>(m_fontsSizes.back());
                 curCharSize = std::get<1>(m_fontsSizes.back());
                 // std::tie(curFont, curCharSize) = m_fontsSizes.back();
-                m_vertices.push_back({});
-                m_outlineVertices.push_back({});
+                // m_vertices.push_back({});
+                // m_outlineVertices.push_back({});
+                (void)m_vertices.emplace_back();
+                (void)m_outlineVertices.emplace_back();
                 indexArrayVert = m_vertices.size() - 1;
             }
             if (0 == i)
@@ -795,10 +755,10 @@ void TextComp::ensureGeometryUpdate() const
                       (prevInfo.getInfoText().getInfo<InfoText::Info::STYLE>() &
                        InfoText::Style::UNDERLINED)))
             {
-                m_vertices[indexArrayVert].insert(
+                (void)m_vertices[indexArrayVert].insert(
                     m_vertices[indexArrayVert].end(),
                     curUndelineVertFill.begin(), curUndelineVertFill.end());
-                m_outlineVertices[indexArrayVert].insert(
+                (void)m_outlineVertices[indexArrayVert].insert(
                     m_outlineVertices[indexArrayVert].end(),
                     curUndelineVertOutline.begin(),
                     curUndelineVertOutline.end());
@@ -823,11 +783,11 @@ void TextComp::ensureGeometryUpdate() const
                       (prevInfo.getInfoText().getInfo<InfoText::Info::STYLE>() &
                        InfoText::Style::STRIKETHROUGH)))
             {
-                m_vertices[indexArrayVert].insert(
+                (void)m_vertices[indexArrayVert].insert(
                     m_vertices[indexArrayVert].end(),
                     curStrikeThroughVertFill.begin(),
                     curStrikeThroughVertFill.end());
-                m_outlineVertices[indexArrayVert].insert(
+                (void)m_outlineVertices[indexArrayVert].insert(
                     m_outlineVertices[indexArrayVert].end(),
                     curStrikeThroughVertOutline.begin(),
                     curStrikeThroughVertOutline.end());
@@ -838,12 +798,13 @@ void TextComp::ensureGeometryUpdate() const
             }
         }
 
-        bool curBold = curInfo.getInfoText().getInfo<InfoText::Info::STYLE>() &
-                       InfoText::Style::BOLD;
-        bool curUnderlined =
+        const bool curBold =
+            curInfo.getInfoText().getInfo<InfoText::Info::STYLE>() &
+            InfoText::Style::BOLD;
+        const bool curUnderlined =
             curInfo.getInfoText().getInfo<InfoText::Info::STYLE>() &
             InfoText::Style::UNDERLINED;
-        bool curStrikeThrough =
+        const bool curStrikeThrough =
             curInfo.getInfoText().getInfo<InfoText::Info::STYLE>() &
             InfoText::Style::STRIKETHROUGH;
         float32_t curItalicShear = 0.f;
@@ -1040,11 +1001,11 @@ void TextComp::ensureGeometryUpdate() const
                     y += curLineSpacing;
                     if (curUnderlined)
                     {
-                        m_vertices[indexArrayVert].insert(
+                        (void)m_vertices[indexArrayVert].insert(
                             m_vertices[indexArrayVert].end(),
                             curUndelineVertFill.begin(),
                             curUndelineVertFill.end());
-                        m_outlineVertices[indexArrayVert].insert(
+                        (void)m_outlineVertices[indexArrayVert].insert(
                             m_outlineVertices[indexArrayVert].end(),
                             curUndelineVertOutline.begin(),
                             curUndelineVertOutline.end());
@@ -1053,11 +1014,11 @@ void TextComp::ensureGeometryUpdate() const
                     }
                     if (curStrikeThrough)
                     {
-                        m_vertices[indexArrayVert].insert(
+                        (void)m_vertices[indexArrayVert].insert(
                             m_vertices[indexArrayVert].end(),
                             curStrikeThroughVertFill.begin(),
                             curStrikeThroughVertFill.end());
-                        m_outlineVertices[indexArrayVert].insert(
+                        (void)m_outlineVertices[indexArrayVert].insert(
                             m_outlineVertices[indexArrayVert].end(),
                             curStrikeThroughVertOutline.begin(),
                             curStrikeThroughVertOutline.end());
@@ -1118,10 +1079,10 @@ void TextComp::ensureGeometryUpdate() const
                 y += curLineSpacing;
                 if (curUnderlined)
                 {
-                    m_vertices[indexArrayVert].insert(
+                    (void)m_vertices[indexArrayVert].insert(
                         m_vertices[indexArrayVert].end(),
                         curUndelineVertFill.begin(), curUndelineVertFill.end());
-                    m_outlineVertices[indexArrayVert].insert(
+                    (void)m_outlineVertices[indexArrayVert].insert(
                         m_outlineVertices[indexArrayVert].end(),
                         curUndelineVertOutline.begin(),
                         curUndelineVertOutline.end());
@@ -1130,11 +1091,11 @@ void TextComp::ensureGeometryUpdate() const
                 }
                 if (curStrikeThrough)
                 {
-                    m_vertices[indexArrayVert].insert(
+                    (void)m_vertices[indexArrayVert].insert(
                         m_vertices[indexArrayVert].end(),
                         curStrikeThroughVertFill.begin(),
                         curStrikeThroughVertFill.end());
-                    m_outlineVertices[indexArrayVert].insert(
+                    (void)m_outlineVertices[indexArrayVert].insert(
                         m_outlineVertices[indexArrayVert].end(),
                         curStrikeThroughVertOutline.begin(),
                         curStrikeThroughVertOutline.end());
@@ -1172,10 +1133,10 @@ void TextComp::ensureGeometryUpdate() const
                     curBold,
                     curInfo.getInfoText().getInfo<InfoText::Info::THICKNESS>());
 
-            float32_t left = glyph.bounds.left;
-            float32_t top = glyph.bounds.top;
-            float32_t right = glyph.bounds.left + glyph.bounds.width;
-            float32_t bottom = glyph.bounds.top + glyph.bounds.height;
+            const float32_t left = glyph.bounds.left;
+            const float32_t top = glyph.bounds.top;
+            const float32_t right = glyph.bounds.left + glyph.bounds.width;
+            const float32_t bottom = glyph.bounds.top + glyph.bounds.height;
 
             // Add the outline glyph to the vertices
             TextComp::addGlyphQuad(
@@ -1187,19 +1148,19 @@ void TextComp::ensureGeometryUpdate() const
             // Update the current bounds with the outlined glyph bounds
             minX = std::min(
                 minX,
-                x + left - curItalicShear * bottom -
+                (x + (left - (curItalicShear * bottom))) -
                     curInfo.getInfoText().getInfo<InfoText::Info::THICKNESS>());
             maxX = std::max(
                 maxX,
-                x + right - curItalicShear * top -
+                (x + (right - (curItalicShear * top))) -
                     curInfo.getInfoText().getInfo<InfoText::Info::THICKNESS>());
             minY = std::min(
                 minY,
-                y + top -
+                (y + top) -
                     curInfo.getInfoText().getInfo<InfoText::Info::THICKNESS>());
             maxY = std::max(
                 maxY,
-                y + bottom -
+                (y + bottom) -
                     curInfo.getInfoText().getInfo<InfoText::Info::THICKNESS>());
         }
 
@@ -1222,10 +1183,10 @@ void TextComp::ensureGeometryUpdate() const
                 curInfo.getInfoText().getInfo<InfoText::Info::THICKNESS>()) <=
             Func::m_epsilon_f)
         {
-            float32_t left = glyph.bounds.left;
-            float32_t top = glyph.bounds.top;
-            float32_t right = glyph.bounds.left + glyph.bounds.width;
-            float32_t bottom = glyph.bounds.top + glyph.bounds.height;
+            const float32_t left = glyph.bounds.left;
+            const float32_t top = glyph.bounds.top;
+            const float32_t right = glyph.bounds.left + glyph.bounds.width;
+            const float32_t bottom = glyph.bounds.top + glyph.bounds.height;
 
             minX = std::min(minX, (x + left) - (curItalicShear * bottom));
             maxX = std::max(maxX, (x + right) - (curItalicShear * top));
@@ -1287,10 +1248,10 @@ void TextComp::ensureGeometryUpdate() const
     // bool  curBold             =
     // curInfo.getInfoText().getInfo<InfoText::Info::STYLE>() &
     // InfoText::Style::Bold;
-    bool curUnderlined =
+    const bool curUnderlined =
         curInfo.getInfoText().getInfo<InfoText::Info::STYLE>() &
         InfoText::Style::UNDERLINED;
-    bool curStrikeThrough =
+    const bool curStrikeThrough =
         curInfo.getInfoText().getInfo<InfoText::Info::STYLE>() &
         InfoText::Style::STRIKETHROUGH;
     // float32_t curUnderlineOffset    =
@@ -1304,19 +1265,19 @@ void TextComp::ensureGeometryUpdate() const
     // curXBounds.height / 2.f;
     if (curUnderlined)
     {
-        m_vertices[indexArrayVert].insert(m_vertices[indexArrayVert].end(),
-                                          curUndelineVertFill.begin(),
-                                          curUndelineVertFill.end());
-        m_outlineVertices[indexArrayVert].insert(
+        (void)m_vertices[indexArrayVert].insert(
+            m_vertices[indexArrayVert].end(), curUndelineVertFill.begin(),
+            curUndelineVertFill.end());
+        (void)m_outlineVertices[indexArrayVert].insert(
             m_outlineVertices[indexArrayVert].end(),
             curUndelineVertOutline.begin(), curUndelineVertOutline.end());
     }
     if (curStrikeThrough)
     {
-        m_vertices[indexArrayVert].insert(m_vertices[indexArrayVert].end(),
-                                          curStrikeThroughVertFill.begin(),
-                                          curStrikeThroughVertFill.end());
-        m_outlineVertices[indexArrayVert].insert(
+        (void)m_vertices[indexArrayVert].insert(
+            m_vertices[indexArrayVert].end(), curStrikeThroughVertFill.begin(),
+            curStrikeThroughVertFill.end());
+        (void)m_outlineVertices[indexArrayVert].insert(
             m_outlineVertices[indexArrayVert].end(),
             curStrikeThroughVertOutline.begin(),
             curStrikeThroughVertOutline.end());

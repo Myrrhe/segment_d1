@@ -54,7 +54,7 @@ public:
 
     void setCharacterSize(const uint32_t size);
 
-    void setLineSpacing(float32_t spacingFactor);
+    void setLineSpacing(const float32_t spacingFactor);
 
     void setLetterSpacing(bool spacingFixed, float32_t spacing);
 
@@ -66,7 +66,7 @@ public:
 
     void setOutlineThickness(const float32_t thickness);
 
-    void setWidthWrap(float32_t widthWrap);
+    void setWidthWrap(const float32_t widthWrap);
 
     const std::vector<const ChainText *> &getChainText() const;
 
@@ -120,22 +120,9 @@ private:
 
     std::vector<const ChainText *> m_chainText;
 
-    // sf::String                      m_string;              ///< String to
-    // display
     InfoText m_infoText;
     mutable std::vector<std::tuple<const sf::Font *, uint64_t>> m_fontsSizes;
     float32_t m_widthWrap;
-    /*
-    const sf::Font*                 m_font;                ///< Font used to
-    display the string uint32_t                    m_characterSize; ///<
-    Base size of characters, in pixels float32_t m_letterSpacingFactor; ///<
-    Spacing factor between letters float32_t m_lineSpacingFactor;
-    ///< Spacing factor between lines InfoText::Style                 m_style;
-    ///< Text style (see Style enum) sf::Color m_fillColor;           ///< Text
-    fill color sf::Color                       m_outlineColor;        ///< Text
-    outline color float32_t                           m_outlineThickness; ///<
-    Thickness of the text's outline
-    */
 
     mutable std::vector<std::vector<sf::Vertex>>
         m_vertices; ///< Vertex array containing the fill geometry

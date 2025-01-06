@@ -33,6 +33,7 @@ namespace segment_d1
 
 bool Engine::qEntered;
 TextComp Engine::textTest;
+sf::Clock Engine::s_clock;
 
 void Engine::initialize() { qEntered = false; }
 
@@ -113,6 +114,11 @@ void Engine::launch()
     textTest.setOutlineColor(sf::Color(0, 255, 0, 127));
     textTest.setPosition(100.0f, 100.0f);
 
+    ShaderManager::getShader("wave")
+        .setUniform("resolution", sf::Vector2f(1920, 1080));
+
+    ShaderManager::getShader("wave").setUniform("wave_amplitude", 0.02f);
+
     while (WindowManager::isOpen())
     {
         getInput();
@@ -143,7 +149,15 @@ void Engine::update()
 void Engine::draw(sf::RenderTarget &renderTarget)
 {
     renderTarget.clear(sf::Color(0, 0, 0, 255));
-    renderTarget.draw(textTest, sf::RenderStates::Default);
+    // renderTarget.draw(textTest, sf::RenderStates::Default);
+
+    ShaderManager::getShader("wave")
+        .setUniform("time", s_clock.getElapsedTime().asSeconds());
+
+    ShaderManager::getShader("wave")
+        .setUniform("wave_phase", s_clock.getElapsedTime().asSeconds() * 0.1f);
+
+    renderTarget.draw(textTest, &ShaderManager::getShader("wave"));
 }
 
 } // namespace segment_d1

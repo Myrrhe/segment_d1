@@ -35,6 +35,9 @@ const std::string PathManager::PathExtension = ".ini";
 
 const std::string PathManager::FolderDat = "assets";
 const std::string PathManager::FolderImg = "img";
+const std::string PathManager::FolderShader = "shaders";
+const std::string PathManager::FolderFragShader = "frag";
+const std::string PathManager::FolderVertShader = "vert";
 const std::string PathManager::FolderSound = "sound";
 const std::string PathManager::FolderFont = "font";
 const std::string PathManager::FolderScreenshot = "screenshot";
@@ -56,6 +59,20 @@ std::string PathManager::getPath(const Dir dir)
     }
     case Dir::IMG: {
         addPath = FolderDat + OsManager::Slash + FolderImg;
+        break;
+    }
+    case Dir::SHADER: {
+        addPath = FolderDat + OsManager::Slash + FolderShader;
+        break;
+    }
+    case Dir::SHADER_FRAG: {
+        addPath = FolderDat + OsManager::Slash + FolderShader +
+                  OsManager::Slash + FolderFragShader;
+        break;
+    }
+    case Dir::SHADER_VERT: {
+        addPath = FolderDat + OsManager::Slash + FolderShader +
+                  OsManager::Slash + FolderVertShader;
         break;
     }
     case Dir::SOUND: {

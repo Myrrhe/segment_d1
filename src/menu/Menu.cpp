@@ -17,28 +17,39 @@
  *
  */
 
-#ifndef SHADERMANAGER_HPP
-#define SHADERMANAGER_HPP
-#include "StaticObject.hpp"
-#include <SFML/Graphics.hpp>
+#include "menu/Menu.hpp"
 
 namespace segment_d1
 {
+std::vector<Menu> Menu::s_menus;
+Menu *Menu::s_currentMenu;
 
-/** \class ShaderManager
-    \brief The engine of the software.
-*/
-class ShaderManager final : public StaticObject
+Menu::Menu() : m_id(0), m_menuLines({}) {}
+
+Menu::Menu(const uint64_t id) : m_id(id), m_menuLines({}) {}
+
+Menu::Menu(const Menu &menu) noexcept = default;
+
+Menu &Menu::operator=(const Menu &menu) = default;
+
+Menu::~Menu() = default;
+
+void Menu::update()
 {
-public:
-    static void initialize();
-    static void terminate();
 
-    static sf::Shader& getShader(const std::string& key);
-private:
-    static std::map<std::string, sf::Shader, std::less<>> shaders;
-};
+}
 
+void Menu::draw(sf::RenderTarget &target, sf::RenderStates states) const
+{
+    for (const auto &menuLine : m_menuLines)
+    {
+        target.draw(menuLine, states);
+    }
+}
+
+void Menu::initialize()
+{
+    s_menus = {Menu(0)};
+    s_currentMenu = &(s_menus[0]);
+}
 } // namespace segment_d1
-
-#endif // SHADERMANAGER_HPP

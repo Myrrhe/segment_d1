@@ -17,28 +17,28 @@
  *
  */
 
-#ifndef SHADERMANAGER_HPP
-#define SHADERMANAGER_HPP
-#include "StaticObject.hpp"
-#include <SFML/Graphics.hpp>
+#include "menu/MenuLine.hpp"
 
 namespace segment_d1
 {
+MenuLine::MenuLine() : m_chainText(""), m_textComp(), m_callback(nullptr) {};
 
-/** \class ShaderManager
-    \brief The engine of the software.
-*/
-class ShaderManager final : public StaticObject
+MenuLine::MenuLine(const std::u32string &str, const sf::Font &font,
+                   const uint32_t characterSize, CallbackType callback)
+    : m_chainText(str), m_textComp({&m_chainText}, font, characterSize),
+      m_callback(callback)
 {
-public:
-    static void initialize();
-    static void terminate();
+}
 
-    static sf::Shader& getShader(const std::string& key);
-private:
-    static std::map<std::string, sf::Shader, std::less<>> shaders;
-};
+MenuLine::MenuLine(const MenuLine &menuLine) noexcept = default;
+
+MenuLine &MenuLine::operator=(const MenuLine &menuLine) = default;
+
+MenuLine::~MenuLine() = default;
+
+void MenuLine::draw(sf::RenderTarget &target, sf::RenderStates states) const
+{
+    target.draw(m_textComp, states);
+}
 
 } // namespace segment_d1
-
-#endif // SHADERMANAGER_HPP

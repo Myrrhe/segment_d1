@@ -45,46 +45,45 @@ InfoText::InfoText(const std::u32string &str)
     const std::size_t vecStrSize = vecStr.size();
     for (std::size_t i = 0; i < vecStrSize; ++i)
     {
-        std::pair<std::u32string, std::u32string> keyVal =
-            Func::getKeyValueLine(vecStr[i]);
+        const auto [key, val] = Func::getKeyValueLine(vecStr[i]);
         // std::cout << "keyVal = " << keyVal.first << ", " << keyVal.second <<
         // std::endl;
-        if (keyVal.first == U"cSize")
+        if (key == U"cSize")
         {
-            charSize = Func::str32ToLui(keyVal.second);
+            charSize = Func::str32ToLui(val);
         }
-        else if (keyVal.first == U"leSpace")
+        else if (key == U"leSpace")
         {
-            std::get<0>(letterSpacing) = keyVal.second[0] - U'0';
+            std::get<0>(letterSpacing) = val[0] - U'0';
             std::get<1>(letterSpacing) =
-                Func::str32ToF(keyVal.second.substr(2, std::string::npos));
+                Func::str32ToF(val.substr(2, std::string::npos));
         }
-        else if (keyVal.first == U"leSpaceFix")
+        else if (key == U"leSpaceFix")
         {
             std::get<0>(letterSpacing) = false;
-            std::get<1>(letterSpacing) = Func::str32ToF(keyVal.second);
+            std::get<1>(letterSpacing) = Func::str32ToF(val);
         }
-        else if (keyVal.first == U"liSpace")
+        else if (key == U"liSpace")
         {
-            lineSpacingFactor = Func::str32ToF(keyVal.second);
+            lineSpacingFactor = Func::str32ToF(val);
         }
-        else if (keyVal.first == U"style")
+        else if (key == U"style")
         {
-            style = static_cast<Style>(Func::str32ToLui(keyVal.second));
+            style = static_cast<Style>(Func::str32ToLui(val));
         }
-        else if (keyVal.first == U"fColor")
+        else if (key == U"fColor")
         {
             fillColor = sf::Color(
-                static_cast<uint32_t>(Func::str32HexToLui(keyVal.second)));
+                static_cast<uint32_t>(Func::str32HexToLui(val)));
         }
-        else if (keyVal.first == U"oColor")
+        else if (key == U"oColor")
         {
             outlineColor = sf::Color(
-                static_cast<uint32_t>(Func::str32HexToLui(keyVal.second)));
+                static_cast<uint32_t>(Func::str32HexToLui(val)));
         }
-        else if (keyVal.first == U"thick")
+        else if (key == U"thick")
         {
-            thickness = Func::str32ToF(keyVal.second);
+            thickness = Func::str32ToF(val);
         }
         else
         {
@@ -213,13 +212,13 @@ InfoText::getInfo<InfoText::Info::THICKNESS>() const
 
 template <>
 void InfoText::setInfo<InfoText::Info::FONT>(
-    InfoText::Typer<InfoText::Info::FONT>::Type t)
+    InfoText::Typer<InfoText::Info::FONT>::Type const t)
 {
     font = t;
 }
 template <>
 void InfoText::setInfo<InfoText::Info::CHAR_SIZE>(
-    InfoText::Typer<InfoText::Info::CHAR_SIZE>::Type t)
+    InfoText::Typer<InfoText::Info::CHAR_SIZE>::Type const t)
 {
     charSize = t;
 }
@@ -231,13 +230,13 @@ void InfoText::setInfo<InfoText::Info::LETTER_SPACING>(
 }
 template <>
 void InfoText::setInfo<InfoText::Info::LINE_SPACING_FACTOR>(
-    InfoText::Typer<InfoText::Info::LINE_SPACING_FACTOR>::Type t)
+    InfoText::Typer<InfoText::Info::LINE_SPACING_FACTOR>::Type const t)
 {
     lineSpacingFactor = t;
 }
 template <>
 void InfoText::setInfo<InfoText::Info::STYLE>(
-    InfoText::Typer<InfoText::Info::STYLE>::Type t)
+    InfoText::Typer<InfoText::Info::STYLE>::Type const t)
 {
     style = t;
 }
@@ -255,7 +254,7 @@ void InfoText::setInfo<InfoText::Info::OUTLINE_COLOR>(
 }
 template <>
 void InfoText::setInfo<InfoText::Info::THICKNESS>(
-    InfoText::Typer<InfoText::Info::THICKNESS>::Type t)
+    InfoText::Typer<InfoText::Info::THICKNESS>::Type const t)
 {
     thickness = t;
 }

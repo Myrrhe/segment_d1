@@ -1,5 +1,5 @@
 /*
- * The engine of the watch.
+ * This file manage the differences between several OS.
  * Copyright (C) 2020  Myrrhe <email>
  *
  * This program is free software: you can redistribute it and/or modify
@@ -17,28 +17,32 @@
  *
  */
 
-#ifndef SHADERMANAGER_HPP
-#define SHADERMANAGER_HPP
-#include "StaticObject.hpp"
-#include <SFML/Graphics.hpp>
+#ifndef MENUSTATE_HPP
+#define MENUSTATE_HPP
+
+////////////////////////////////////////////////////////////
+// Headers
+////////////////////////////////////////////////////////////
+#include <cstdint>
 
 namespace segment_d1
 {
-
-/** \class ShaderManager
-    \brief The engine of the software.
-*/
-class ShaderManager final : public StaticObject
+////////////////////////////////////////////////////////////
+/// \brief MenuState class
+///
+////////////////////////////////////////////////////////////
+class MenuState final
 {
 public:
-    static void initialize();
-    static void terminate();
-
-    static sf::Shader& getShader(const std::string& key);
+    MenuState();
+    explicit MenuState(const uint64_t id);
+    MenuState(const MenuState &menuState) noexcept;
+    MenuState &operator=(const MenuState &menuState);
+    ~MenuState();
 private:
-    static std::map<std::string, sf::Shader, std::less<>> shaders;
+    uint64_t m_id;
 };
 
 } // namespace segment_d1
 
-#endif // SHADERMANAGER_HPP
+#endif // MENUSTATE_HPP

@@ -9,6 +9,7 @@
 #include "PathManager.hpp"
 #include "Quaternion.hpp"
 #include "ScreenConnected.hpp"
+#include "ShaderManager.hpp"
 #include "StaticObject.hpp"
 #include "TextureManager.hpp"
 #include "Types.hpp"
@@ -46,6 +47,9 @@ int main(int /*argc*/, char **argv, char ** /*options*/)
     segment_d1::OsManager::initialize();
 
     segment_d1::WindowManager::initialize();
+
+    segment_d1::ShaderManager::initialize();
+
     segment_d1::Logger().info(
         segment_d1::OsManager::getSizePng("assets/p1.png"));
     sf::CircleShape shape(100.f);

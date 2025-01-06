@@ -44,6 +44,8 @@ private:
 
     static bool qEntered;
     static TextComp textTest;
+
+    static sf::Clock s_clock;
 };
 
 } // namespace segment_d1

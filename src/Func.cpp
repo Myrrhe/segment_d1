@@ -767,10 +767,10 @@ std::vector<std::string> Func::split(const std::string_view &s,
     const std::size_t delimLen = delim.length();
     while ((posEnd = s.find(delim, posStart)) != std::string::npos)
     {
-        res.emplace_back(s.substr(posStart, posEnd - posStart));
+        (void)res.emplace_back(s.substr(posStart, posEnd - posStart));
         posStart = posEnd + delimLen;
     }
-    res.emplace_back(s.substr(posStart, std::string::npos));
+    (void)res.emplace_back(s.substr(posStart, std::string::npos));
     return res;
 }
 
@@ -929,7 +929,7 @@ std::vector<std::string> Func::getDir(const std::string &dir)
     {
         while ((dirp = ::readdir(dp)) != nullptr)
         {
-            res.emplace_back(static_cast<std::string>(dirp->d_name));
+            (void)res.emplace_back(static_cast<std::string>(dirp->d_name));
         }
         const int32_t err = ::closedir(dp);
         if (-1 == err)
@@ -1541,7 +1541,7 @@ std::u32string Func::str8Tostr32(const std::string_view &s)
 {
     std::u32string res = U"";
     std::string str = {s.begin(), s.end()};
-    utf8ToUtf32(str.begin(), str.end(), std::back_inserter(res));
+    (void)utf8ToUtf32(str.begin(), str.end(), std::back_inserter(res));
     return res;
 }
 
@@ -1549,7 +1549,7 @@ std::string Func::str32Tostr8(const std::u32string_view &s)
 {
     std::string res = "";
     std::u32string str = {s.begin(), s.end()};
-    utf32ToUtf8(str.begin(), str.end(), std::back_inserter(res));
+    (void)utf32ToUtf8(str.begin(), str.end(), std::back_inserter(res));
     return res;
 }
 

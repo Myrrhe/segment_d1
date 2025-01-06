@@ -29,33 +29,32 @@ BlockInfoText::BlockInfoText(const std::u32string &str)
     const std::size_t vecStrSize = vecStr.size();
     for (std::size_t i = 0; i < vecStrSize; ++i)
     {
-        std::pair<std::u32string, std::u32string> keyVal =
-            Func::getKeyValueLine(vecStr[i]);
-        if (keyVal.first == InfoText::Keys32[1])
+        const auto [key, _val] = Func::getKeyValueLine(vecStr[i]);
+        if (key == InfoText::Keys32[1])
         {
             useInfo[1] = true;
         }
-        else if (keyVal.first == InfoText::Keys32[2])
+        else if (key == InfoText::Keys32[2])
         {
             useInfo[2] = true;
         }
-        else if (keyVal.first == InfoText::Keys32[3])
+        else if (key == InfoText::Keys32[3])
         {
             useInfo[3] = true;
         }
-        else if (keyVal.first == InfoText::Keys32[4])
+        else if (key == InfoText::Keys32[4])
         {
             useInfo[4] = true;
         }
-        else if (keyVal.first == InfoText::Keys32[5])
+        else if (key == InfoText::Keys32[5])
         {
             useInfo[5] = true;
         }
-        else if (keyVal.first == InfoText::Keys32[6])
+        else if (key == InfoText::Keys32[6])
         {
             useInfo[6] = true;
         }
-        else if (keyVal.first == InfoText::Keys32[7])
+        else if (key == InfoText::Keys32[7])
         {
             useInfo[7] = true;
         }
@@ -285,7 +284,7 @@ std::u32string BlockInfoText::toStr() const
     {
         res = U"<";
         for (InfoText::Info i = InfoText::Info::INFO_BEGIN;
-            i < InfoText::Info::NB_INFO; ++i)
+             i < InfoText::Info::NB_INFO; ++i)
         {
             if (isUsed(i))
             {
