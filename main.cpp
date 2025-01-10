@@ -64,17 +64,6 @@ int main(int /*argc*/, char **argv, char ** /*options*/)
 
     segment_d1::Engine::launch();
 
-    // while (segment_d1::WindowManager::isOpen())
-    // {
-    //     sf::Event event;
-    //     while (segment_d1::WindowManager::pollEvent(event))
-    //     {
-    //         if (event.type == sf::Event::Closed)
-    //         {
-    //             segment_d1::WindowManager::close();
-    //         }
-    //     }
-
     //     segment_d1::WindowManager::clear();
     //     segment_d1::WindowManager::draw(shape);
     //     segment_d1::WindowManager::display();

@@ -332,10 +332,12 @@ void OsManager::initializeListScreen()
             screen.name =
                 strTowstr(static_cast<std::string>(nameDD.DeviceString));
             screen.bounds = sf::Rect<float32_t>(
-                static_cast<float32_t>(win32Mode.dmPosition.x),
-                static_cast<float32_t>(win32Mode.dmPosition.y),
-                static_cast<float32_t>(win32Mode.dmPelsWidth),
-                static_cast<float32_t>(win32Mode.dmPelsHeight));
+                sf::Vector2<float32_t>(
+                    static_cast<float32_t>(win32Mode.dmPosition.x),
+                    static_cast<float32_t>(win32Mode.dmPosition.y)),
+                sf::Vector2<float32_t>(
+                    static_cast<float32_t>(win32Mode.dmPelsWidth),
+                    static_cast<float32_t>(win32Mode.dmPelsHeight)));
             screen.refreshRate = win32Mode.dmDisplayFrequency;
             screen.dpi = dpi;
 
@@ -353,7 +355,7 @@ void OsManager::initializeListScreen()
                 const std::size_t screensSize = screens.size();
                 for (std::size_t i = 0; i < screensSize; ++i)
                 {
-                    if (screens[i].bounds.left > screen.bounds.left)
+                    if (screens[i].bounds.position.x > screen.bounds.position.x)
                     {
                         index = i;
                         break;
@@ -712,9 +714,9 @@ void OsManager::loadTextureR(
 
             tmp = dir + Slash + static_cast<std::string>(file.cFileName);
 
-            if ((tmp.size() > 3) &&
-                (tmp.substr(tmp.size() - ImgExtension.size(),
-                            ImgExtension.size()) == ImgExtension))
+            if (tmp.size() > 3 && static_cast<std::string_view>(tmp).substr(
+                                      tmp.size() - ImgExtension.size(),
+                                      ImgExtension.size()) == ImgExtension)
             {
                 (*mapTexture)[static_cast<std::string>(file.cFileName)] =
                     Func::loadTexture(tmp);
@@ -874,16 +876,18 @@ void OsManager::loadTextureEmptyR(
 
             tmp = dir + Slash + static_cast<std::string>(file.cFileName);
 
-            if ((tmp.size() > 3) &&
-                (tmp.substr(tmp.size() - ImgExtension.size(),
-                            ImgExtension.size()) == ImgExtension))
+            if (tmp.size() > 3 && static_cast<std::string_view>(tmp).substr(
+                                      tmp.size() - ImgExtension.size(),
+                                      ImgExtension.size()) == ImgExtension)
             {
                 (*mapTexture)[static_cast<std::string>(file.cFileName)] =
                     sf::Texture();
                 const sf::Vector2<uint32_t> newRect = getSizePng(tmp);
                 (*mapTextureRect)[static_cast<std::string>(file.cFileName)] =
-                    sf::Rect<int32_t>(0, 0, static_cast<int32_t>(newRect.x),
-                                      static_cast<int32_t>(newRect.y));
+                    sf::Rect<int32_t>(
+                        sf::Vector2<int32_t>(0, 0),
+                        sf::Vector2<int32_t>(static_cast<int32_t>(newRect.x),
+                                             static_cast<int32_t>(newRect.y)));
                 (*mapTextureLoaded)[static_cast<std::string>(file.cFileName)] =
                     false;
                 vectorIdTexture->push_back(
@@ -1005,11 +1009,12 @@ void OsManager::loadOneTexture(
                 continue;
             }
             tmp = dir + Slash + static_cast<std::string>(file.cFileName);
-            if ((tmp.size() > 3) &&
-                (tmp.substr(tmp.size() - ImgExtension.size(),
-                            ImgExtension.size()) == ImgExtension) &&
-                ((name + ImgExtension) ==
-                 static_cast<std::string>(file.cFileName)))
+            if (tmp.size() > 3 &&
+                static_cast<std::string_view>(tmp).substr(
+                    tmp.size() - ImgExtension.size(), ImgExtension.size()) ==
+                    ImgExtension &&
+                name + std::string(ImgExtension) ==
+                    static_cast<std::string>(file.cFileName))
             {
                 (*mapTexture)[static_cast<std::string>(file.cFileName)] =
                     Func::loadTexture(tmp);
@@ -1155,18 +1160,21 @@ void OsManager::loadOneTextureEmpty(
                 continue;
             }
             tmp = dir + Slash + static_cast<std::string>(file.cFileName);
-            if ((tmp.size() > 3) &&
-                (tmp.substr(tmp.size() - ImgExtension.size(),
-                            ImgExtension.size()) == ImgExtension) &&
-                ((name + ImgExtension) ==
-                 static_cast<std::string>(file.cFileName)))
+            if (tmp.size() > 3 &&
+                static_cast<std::string_view>(tmp).substr(
+                    tmp.size() - ImgExtension.size(), ImgExtension.size()) ==
+                    ImgExtension &&
+                name + std::string(ImgExtension) ==
+                    static_cast<std::string>(file.cFileName))
             {
                 (*mapTexture)[static_cast<std::string>(file.cFileName)] =
                     sf::Texture();
                 const sf::Vector2<uint32_t> newRect = getSizePng(tmp);
                 (*mapTextureRect)[static_cast<std::string>(file.cFileName)] =
-                    sf::Rect<int32_t>(0, 0, static_cast<int32_t>(newRect.x),
-                                      static_cast<int32_t>(newRect.y));
+                    sf::Rect<int32_t>(
+                        sf::Vector2<int32_t>(0, 0),
+                        sf::Vector2<int32_t>(static_cast<int32_t>(newRect.x),
+                                             static_cast<int32_t>(newRect.y)));
                 (*mapTextureLoaded)[static_cast<std::string>(file.cFileName)] =
                     false;
                 vectorIdTexture->push_back(

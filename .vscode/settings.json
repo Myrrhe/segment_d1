@@ -86,6 +86,8 @@
         "xtree": "cpp",
         "stack": "cpp",
         "codecvt": "cpp",
-        "cassert": "cpp"
+        "cassert": "cpp",
+        "list": "cpp",
+        "xhash": "cpp"
     }
 }

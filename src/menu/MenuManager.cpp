@@ -17,29 +17,40 @@
  *
  */
 
-#ifndef SHADERMANAGER_HPP
-#define SHADERMANAGER_HPP
-#include "StaticObject.hpp"
-#include <SFML/Graphics.hpp>
-#include <map>
+#include "menu/MenuManager.hpp"
 
 namespace segment_d1
 {
 
-/** \class ShaderManager
-    \brief The engine of the software.
-*/
-class ShaderManager final : public StaticObject
-{
-public:
-    static void initialize();
-    static void terminate();
+MenuManager::MenuManager()
+    : m_menus({}), m_currentMenu(nullptr), m_previousMenu(nullptr)
 
-    static sf::Shader& getShader(const std::string& key);
-private:
-    static std::map<std::string, sf::Shader, std::less<>> shaders;
-};
+{
+    m_menus = {Menu(0, [](const MenuState &m) noexcept { return m; })};
+    m_currentMenu = &(m_menus[0]);
+    m_previousMenu = nullptr;
+}
+
+void MenuManager::update()
+{
+    if (nullptr != m_currentMenu)
+    {
+        const MenuState res = m_currentMenu->update();
+        if (res.isNavigation())
+        {
+            m_previousMenu = m_currentMenu;
+            m_currentMenu = &(m_menus[res.getId()]);
+        }
+    }
+}
+
+void MenuManager::draw(sf::RenderTarget &renderTarget,
+                       const sf::RenderStates &renderStates) const
+{
+    if (nullptr != m_currentMenu)
+    {
+        renderTarget.draw(*m_currentMenu, renderStates);
+    }
+}
 
 } // namespace segment_d1
-
-#endif // SHADERMANAGER_HPP

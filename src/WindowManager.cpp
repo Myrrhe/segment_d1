@@ -52,6 +52,7 @@ char32_t WindowManager::charEntered;
 
 bool WindowManager::keyPressed;
 sf::Keyboard::Key WindowManager::codeKeyPressed;
+sf::Keyboard::Scancode WindowManager::scancodeKeyPressed;
 
 bool WindowManager::altEntered;
 bool WindowManager::controlEntered;
@@ -67,10 +68,10 @@ void WindowManager::create()
 {
     renderWindow = std::make_unique<sf::RenderWindow>();
     renderWindow->create(
-        sf::VideoMode(Width, Height, ModeBitsPerPixel), "",
-        sf::Style::Titlebar | sf::Style::Close,
-        sf::ContextSettings(0, 0, 0, 1u, 1u,
-                            sf::ContextSettings::Attribute::Default, false));
+        sf::VideoMode({Width, Height}, ModeBitsPerPixel), "",
+        sf::Style::Titlebar | sf::Style::Close, sf::State::Windowed,
+        sf::ContextSettings{0, 0, 0, 1u, 1u,
+                            sf::ContextSettings::Attribute::Default, false});
 
     stateView.push(IdView::MAIN);
     setViewTarget(*renderWindow);
@@ -88,8 +89,7 @@ void WindowManager::initialize()
         textureIcon->setRepeated(false);
         if ((textureIcon->getSize().x > 0) && (textureIcon->getSize().y > 0))
         {
-            renderWindow->setIcon(OsManager::WidthIcon, OsManager::HeightIcon,
-                                  textureIcon->copyToImage().getPixelsPtr());
+            renderWindow->setIcon(textureIcon->copyToImage());
         }
     }
 
@@ -146,12 +146,18 @@ void WindowManager::setViewTarget(sf::RenderTarget &renderTarget)
                 sf::Vector2<float32_t>(static_cast<float32_t>(sizeTarget.x),
                                        static_cast<float32_t>(sizeTarget.y));
         }
-        views[0].reset(sf::Rect<float32_t>(0.0f, 0.0f, Width, Height));
+        views[0] = sf::View(
+            sf::Rect<float32_t>(sf::Vector2<float32_t>(0.0f, 0.0f),
+                                sf::Vector2<float32_t>(Width, Height)));
         views[0].setViewport(sf::Rect<float32_t>(
-            ((rendingSize.x - (Width * mainScale)) * 0.5f) / rendingSize.x,
-            ((rendingSize.y - (Height * mainScale)) * 0.5f) / rendingSize.y,
-            1.0f - ((rendingSize.x - (Width * mainScale)) / rendingSize.x),
-            1.0f - ((rendingSize.y - (Height * mainScale)) / rendingSize.y)));
+            sf::Vector2<float32_t>(
+                ((rendingSize.x - (Width * mainScale)) * 0.5f) / rendingSize.x,
+                ((rendingSize.y - (Height * mainScale)) * 0.5f) /
+                    rendingSize.y),
+            sf::Vector2<float32_t>(
+                1.0f - ((rendingSize.x - (Width * mainScale)) / rendingSize.x),
+                1.0f -
+                    ((rendingSize.y - (Height * mainScale)) / rendingSize.y))));
         renderTarget.setView(views[0]);
         break;
     }
@@ -169,16 +175,19 @@ void WindowManager::setViewTarget(sf::RenderTarget &renderTarget)
                 sf::Vector2<float32_t>(static_cast<float32_t>(sizeTarget.x),
                                        static_cast<float32_t>(sizeTarget.y));
         }
-        views[1].reset(sf::Rect<float32_t>(uiX, uiY, uiWidth, uiHeight));
+        views[1] = sf::View(
+            sf::Rect<float32_t>(sf::Vector2<float32_t>(uiX, uiY),
+                                sf::Vector2<float32_t>(uiWidth, uiHeight)));
         views[1].setViewport(sf::Rect<float32_t>(
-            (((rendingSize.x - (Width * mainScale)) * 0.5f) +
-             (uiX * mainScale)) /
-                rendingSize.x,
-            (((rendingSize.y - (Height * mainScale)) * 0.5f) +
-             (uiY * mainScale)) /
-                rendingSize.y,
-            (uiWidth * mainScale) / rendingSize.x,
-            (uiHeight * mainScale) / rendingSize.y));
+            sf::Vector2<float32_t>(
+                (((rendingSize.x - (Width * mainScale)) * 0.5f) +
+                 (uiX * mainScale)) /
+                    rendingSize.x,
+                (((rendingSize.y - (Height * mainScale)) * 0.5f) +
+                 (uiY * mainScale)) /
+                    rendingSize.y),
+            sf::Vector2<float32_t>((uiWidth * mainScale) / rendingSize.x,
+                                   (uiHeight * mainScale) / rendingSize.y)));
         renderTarget.setView(views[1]);
         break;
     }
@@ -200,22 +209,31 @@ void WindowManager::setViewTarget(sf::RenderTarget &renderTarget)
                 sf::Vector2<float32_t>(static_cast<float32_t>(sizeTarget.x),
                                        static_cast<float32_t>(sizeTarget.y));
         }
-        views[2].reset(sf::Rect<float32_t>(0.0f, 0.0f, Width, Height));
+        views[2] = sf::View(
+            sf::Rect<float32_t>(sf::Vector2<float32_t>(0.0f, 0.0f),
+                                sf::Vector2<float32_t>(Width, Height)));
         views[2].setViewport(sf::Rect<float32_t>(
-            ((rendingSize.x - ((Width + (2.0f * offsetX)) * mainScale)) *
-             0.5f) /
-                rendingSize.x,
-            ((rendingSize.y - ((Height + (2.0f * offsetY)) * mainScale)) *
-             0.5f) /
-                rendingSize.y,
-            1.0f - ((rendingSize.x - (Width * mainScale)) / rendingSize.x),
-            1.0f - ((rendingSize.y - (Height * mainScale)) / rendingSize.y)));
+            sf::Vector2<float32_t>(
+                ((rendingSize.x - ((Width + (2.0f * offsetX)) * mainScale)) *
+                 0.5f) /
+                    rendingSize.x,
+                ((rendingSize.y - ((Height + (2.0f * offsetY)) * mainScale)) *
+                 0.5f) /
+                    rendingSize.y),
+            sf::Vector2<float32_t>(
+                1.0f - ((rendingSize.x - (Width * mainScale)) / rendingSize.x),
+                1.0f -
+                    ((rendingSize.y - (Height * mainScale)) / rendingSize.y))));
         renderTarget.setView(views[2]);
         break;
     }
     case IdView::WHOLE: {
-        views[3].reset(sf::Rect<float32_t>(0.0f, 0.0f, Width, Height));
-        views[3].setViewport(sf::Rect<float32_t>(0.0f, 0.0f, 1.0f, 1.0f));
+        views[3] = sf::View(
+            sf::Rect<float32_t>(sf::Vector2<float32_t>(0.0f, 0.0f),
+                                sf::Vector2<float32_t>(Width, Height)));
+        views[3].setViewport(
+            sf::Rect<float32_t>(sf::Vector2<float32_t>(0.0f, 0.0f),
+                                sf::Vector2<float32_t>(1.0f, 1.0f)));
         renderTarget.setView(views[3]);
         break;
     }
@@ -247,32 +265,40 @@ void WindowManager::setOffsetY(const float32_t newOffsetY)
 void WindowManager::manageEvent()
 {
     MouseWheel::setDeltaWheel(0);
-    sf::Event event;
     textEntered = false;
     keyPressed = false;
-    while (renderWindow->pollEvent(event))
+    while (const std::optional event = renderWindow->pollEvent())
     {
-        if (event.type == sf::Event::Closed)
+        if (event->is<sf::Event::Closed>())
         {
             renderWindow->close();
         }
-        else if (event.type == sf::Event::MouseWheelMoved)
-        {
-            MouseWheel::setDeltaWheel(event.mouseWheel.delta);
-        }
-        else if (event.type == sf::Event::TextEntered)
+        else if (const auto *const currentTextEntered =
+                     event->getIf<sf::Event::TextEntered>())
         {
             textEntered = true;
-            charEntered = event.text.unicode;
+            charEntered = currentTextEntered->unicode;
         }
-        else if (event.type == sf::Event::KeyPressed)
+        else if (const auto *const currentMouseWheel =
+                     event->getIf<sf::Event::MouseWheelScrolled>())
+        {
+            MouseWheel::setDeltaWheel(currentMouseWheel->delta);
+        }
+
+        else if (const auto *const currentKeyPressed =
+                     event->getIf<sf::Event::KeyPressed>())
         {
             keyPressed = true;
-            codeKeyPressed = event.key.code;
-            altEntered = event.key.alt;
-            controlEntered = event.key.control;
-            shiftEntered = event.key.shift;
-            systemEntered = event.key.system;
+            codeKeyPressed = currentKeyPressed->code;
+            scancodeKeyPressed = currentKeyPressed->scancode;
+            altEntered = currentKeyPressed->alt;
+            controlEntered = currentKeyPressed->control;
+            shiftEntered = currentKeyPressed->shift;
+            systemEntered = currentKeyPressed->system;
+            if (sf::Keyboard::Scancode::Escape == scancodeKeyPressed)
+            {
+                renderWindow->close();
+            }
         }
         else
         {
@@ -282,11 +308,6 @@ void WindowManager::manageEvent()
 }
 
 bool WindowManager::isOpen() { return renderWindow->isOpen(); }
-
-bool WindowManager::pollEvent(sf::Event &event)
-{
-    return renderWindow->pollEvent(event);
-}
 
 bool WindowManager::hasFocus() { return renderWindow->hasFocus(); }
 

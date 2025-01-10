@@ -90,29 +90,6 @@ const NodeText *ChainText::operator[](const std::size_t i) const
     return nodes[i];
 }
 
-bool ChainText::operator==(const ChainText &right) const
-{
-    bool res = true;
-    if (nodes.size() != right.nodes.size())
-    {
-        res = false;
-    }
-    if (res)
-    {
-        const std::size_t nodesSize = nodes.size();
-        for (std::size_t i = 0; i < nodesSize; ++i)
-        {
-            res = res && (*nodes[i]).isEqual(*right.nodes[i]);
-        }
-    }
-    return res;
-}
-
-bool ChainText::operator!=(const ChainText &right) const
-{
-    return !(*this == right);
-}
-
 uint64_t ChainText::getNbChar() const
 {
     uint64_t res = 0;

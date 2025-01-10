@@ -132,7 +132,7 @@ private:
         m_bounds; ///< Bounding rectangle of the text (in local coordinates)
     mutable bool
         m_geometryNeedUpdate; ///< Does the geometry need to be recomputed?
-    mutable sf::Uint64 m_fontTextureId; ///< The font texture id
+    mutable uint64_t m_fontTextureId; ///< The font texture id
 };
 
 } // namespace segment_d1

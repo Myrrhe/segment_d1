@@ -32,7 +32,8 @@ std::map<std::string, sf::Shader, std::less<>> ShaderManager::shaders;
 
 void ShaderManager::initialize()
 {
-    std::unordered_map<std::string, std::pair<std::string, std::string>>
+    std::unordered_map<std::string,
+                       std::pair<std::filesystem::path, std::filesystem::path>>
         shaderFiles;
 
     for (const auto &entry : std::filesystem::directory_iterator(
@@ -40,7 +41,7 @@ void ShaderManager::initialize()
     {
         if (entry.is_regular_file())
         {
-            const std::string filePath = entry.path().string();
+            const std::filesystem::path filePath = entry.path();
             const std::string fileName = entry.path().stem().string();
             const std::string extension = entry.path().extension().string();
 
@@ -60,9 +61,10 @@ void ShaderManager::initialize()
         }
     }
 
-    for (const auto& [name, paths] : shaderFiles) {
-        const auto& vertexPath = paths.first;
-        const auto& fragmentPath = paths.second;
+    for (const auto &[name, paths] : shaderFiles)
+    {
+        const auto &vertexPath = paths.first;
+        const auto &fragmentPath = paths.second;
 
         if ((!vertexPath.empty()) && (!fragmentPath.empty()))
         {
@@ -71,14 +73,18 @@ void ShaderManager::initialize()
                 Logger().info("Failed to load combined shader: " + name);
             }
         }
-        else if (!vertexPath.empty()) {
-            if (!shaders[name].loadFromFile(vertexPath, sf::Shader::Vertex))
+        else if (!vertexPath.empty())
+        {
+            if (!shaders[name].loadFromFile(vertexPath,
+                                            sf::Shader::Type::Vertex))
             {
                 Logger().info("Failed to load vertex shader: " + name);
             }
         }
-        else if (!fragmentPath.empty()) {
-            if (!shaders[name].loadFromFile(fragmentPath, sf::Shader::Fragment))
+        else if (!fragmentPath.empty())
+        {
+            if (!shaders[name].loadFromFile(fragmentPath,
+                                            sf::Shader::Type::Fragment))
             {
                 Logger().info("Failed to load fragment shader: " + name);
             }

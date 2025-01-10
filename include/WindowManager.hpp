@@ -44,7 +44,6 @@ public:
     static void manageEvent();
 
     static bool isOpen();
-    static bool pollEvent(sf::Event &event);
     static bool hasFocus();
     static void close();
     static void clear(const sf::Color &color);
@@ -107,6 +106,7 @@ private:
 
     static bool keyPressed;
     static sf::Keyboard::Key codeKeyPressed;
+    static sf::Keyboard::Scancode scancodeKeyPressed;
 
     static bool altEntered;
     static bool controlEntered;

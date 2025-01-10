@@ -46,27 +46,27 @@ void TextComp::addLine(std::vector<sf::Vertex> &vertices,
         std::floor(((lineTop + offset) - (thickness / 2)) + 0.5f);
     const float32_t bottom = top + std::floor(thickness + 0.5f);
 
-    (void)vertices.emplace_back(
+    (void)vertices.emplace_back(sf::Vertex{
         sf::Vector2<float32_t>(-outlineThickness, top - outlineThickness),
-        color, sf::Vector2<float32_t>(1, 1));
+        color, sf::Vector2<float32_t>(1, 1)});
     (void)vertices.emplace_back(
-        sf::Vector2<float32_t>(lineLength + outlineThickness,
-                               top - outlineThickness),
-        color, sf::Vector2<float32_t>(1, 1));
-    (void)vertices.emplace_back(
+        sf::Vertex{sf::Vector2<float32_t>(lineLength + outlineThickness,
+                                          top - outlineThickness),
+                   color, sf::Vector2<float32_t>(1, 1)});
+    (void)vertices.emplace_back(sf::Vertex{
         sf::Vector2<float32_t>(-outlineThickness, bottom + outlineThickness),
-        color, sf::Vector2<float32_t>(1, 1));
-    (void)vertices.emplace_back(
+        color, sf::Vector2<float32_t>(1, 1)});
+    (void)vertices.emplace_back(sf::Vertex{
         sf::Vector2<float32_t>(-outlineThickness, bottom + outlineThickness),
-        color, sf::Vector2<float32_t>(1, 1));
+        color, sf::Vector2<float32_t>(1, 1)});
     (void)vertices.emplace_back(
-        sf::Vector2<float32_t>(lineLength + outlineThickness,
-                               top - outlineThickness),
-        color, sf::Vector2<float32_t>(1, 1));
+        sf::Vertex{sf::Vector2<float32_t>(lineLength + outlineThickness,
+                                          top - outlineThickness),
+                   color, sf::Vector2<float32_t>(1, 1)});
     (void)vertices.emplace_back(
-        sf::Vector2<float32_t>(lineLength + outlineThickness,
-                               bottom + outlineThickness),
-        color, sf::Vector2<float32_t>(1, 1));
+        sf::Vertex{sf::Vector2<float32_t>(lineLength + outlineThickness,
+                                          bottom + outlineThickness),
+                   color, sf::Vector2<float32_t>(1, 1)});
 }
 
 void TextComp::addLinePart(std::vector<sf::Vertex> &vertices,
@@ -79,27 +79,30 @@ void TextComp::addLinePart(std::vector<sf::Vertex> &vertices,
         std::floor(((lineTop + offset) - (thickness / 2)) + 0.5f);
     const float32_t bottom = top + std::floor(thickness + 0.5f);
 
-    (void)vertices.emplace_back(sf::Vector2<float32_t>(xInit - outlineThickness,
-                                                       top - outlineThickness),
-                                color, sf::Vector2<float32_t>(1, 1));
-    (void)vertices.emplace_back(sf::Vector2<float32_t>(xFina + outlineThickness,
-                                                       top - outlineThickness),
-                                color, sf::Vector2<float32_t>(1, 1));
     (void)vertices.emplace_back(
-        sf::Vector2<float32_t>(xInit - outlineThickness,
-                               bottom + outlineThickness),
-        color, sf::Vector2<float32_t>(1, 1));
+        sf::Vertex{sf::Vector2<float32_t>(xInit - outlineThickness,
+                                          top - outlineThickness),
+                   color, sf::Vector2<float32_t>(1, 1)});
     (void)vertices.emplace_back(
-        sf::Vector2<float32_t>(xInit - outlineThickness,
-                               bottom + outlineThickness),
-        color, sf::Vector2<float32_t>(1, 1));
-    (void)vertices.emplace_back(sf::Vector2<float32_t>(xFina + outlineThickness,
-                                                       top - outlineThickness),
-                                color, sf::Vector2<float32_t>(1, 1));
+        sf::Vertex{sf::Vector2<float32_t>(xFina + outlineThickness,
+                                          top - outlineThickness),
+                   color, sf::Vector2<float32_t>(1, 1)});
     (void)vertices.emplace_back(
-        sf::Vector2<float32_t>(xFina + outlineThickness,
-                               bottom + outlineThickness),
-        color, sf::Vector2<float32_t>(1, 1));
+        sf::Vertex{sf::Vector2<float32_t>(xInit - outlineThickness,
+                                          bottom + outlineThickness),
+                   color, sf::Vector2<float32_t>(1, 1)});
+    (void)vertices.emplace_back(
+        sf::Vertex{sf::Vector2<float32_t>(xInit - outlineThickness,
+                                          bottom + outlineThickness),
+                   color, sf::Vector2<float32_t>(1, 1)});
+    (void)vertices.emplace_back(
+        sf::Vertex{sf::Vector2<float32_t>(xFina + outlineThickness,
+                                          top - outlineThickness),
+                   color, sf::Vector2<float32_t>(1, 1)});
+    (void)vertices.emplace_back(
+        sf::Vertex{sf::Vector2<float32_t>(xFina + outlineThickness,
+                                          bottom + outlineThickness),
+                   color, sf::Vector2<float32_t>(1, 1)});
 }
 
 // Add a glyph quad to the vertex array
@@ -109,54 +112,49 @@ void TextComp::addGlyphQuad(std::vector<sf::Vertex> &vertices,
                             const float32_t italicShear,
                             const float32_t outlineThickness)
 {
-    const float32_t padding = 1.0;
+    const sf::Vector2 padding(1.f, 1.f);
 
-    const float32_t left = glyph.bounds.left - padding;
-    const float32_t top = glyph.bounds.top - padding;
-    const float32_t right = glyph.bounds.left + glyph.bounds.width + padding;
-    const float32_t bottom = glyph.bounds.top + glyph.bounds.height + padding;
+    const sf::Vector2<float32_t> p1 = glyph.bounds.position - padding;
+    const sf::Vector2<float32_t> p2 =
+        glyph.bounds.position + glyph.bounds.size + padding;
 
-    const float32_t u1 =
-        static_cast<float32_t>(glyph.textureRect.left) - padding;
-    const float32_t v1 =
-        static_cast<float32_t>(glyph.textureRect.top) - padding;
-    const float32_t u2 = static_cast<float32_t>(glyph.textureRect.left +
-                                                glyph.textureRect.width) +
-                         padding;
-    const float32_t v2 = static_cast<float32_t>(glyph.textureRect.top +
-                                                glyph.textureRect.height) +
-                         padding;
+    const auto uv1 =
+        static_cast<sf::Vector2<float32_t>>(glyph.textureRect.position) -
+        padding;
+    const auto uv2 = static_cast<sf::Vector2<float32_t>>(
+                         glyph.textureRect.position + glyph.textureRect.size) +
+                     padding;
 
-    (void)vertices.emplace_back(
-        sf::Vector2<float32_t>(((position.x + left) - (italicShear * top)) -
-                                   outlineThickness,
-                               (position.y + top) - outlineThickness),
-        color, sf::Vector2<float32_t>(u1, v1));
-    (void)vertices.emplace_back(
-        sf::Vector2<float32_t>(((position.x + right) - (italicShear * top)) -
-                                   outlineThickness,
-                               (position.y + top) - outlineThickness),
-        color, sf::Vector2<float32_t>(u2, v1));
-    (void)vertices.emplace_back(
-        sf::Vector2<float32_t>(((position.x + left) - (italicShear * bottom)) -
-                                   outlineThickness,
-                               (position.y + bottom) - outlineThickness),
-        color, sf::Vector2<float32_t>(u1, v2));
-    (void)vertices.emplace_back(
-        sf::Vector2<float32_t>(((position.x + left) - (italicShear * bottom)) -
-                                   outlineThickness,
-                               (position.y + bottom) - outlineThickness),
-        color, sf::Vector2<float32_t>(u1, v2));
-    (void)vertices.emplace_back(
-        sf::Vector2<float32_t>(((position.x + right) - (italicShear * top)) -
-                                   outlineThickness,
-                               (position.y + top) - outlineThickness),
-        color, sf::Vector2<float32_t>(u2, v1));
-    (void)vertices.emplace_back(
-        sf::Vector2<float32_t>(((position.x + right) - (italicShear * bottom)) -
-                                   outlineThickness,
-                               (position.y + bottom) - outlineThickness),
-        color, sf::Vector2<float32_t>(u2, v2));
+    vertices.emplace_back(
+        sf::Vertex{position + sf::Vector2<float32_t>(p1.x - italicShear * p1.y -
+                                                         outlineThickness,
+                                                     p1.y - outlineThickness),
+                   color, sf::Vector2<float32_t>(uv1.x, uv1.y)});
+    vertices.emplace_back(
+        sf::Vertex{position + sf::Vector2<float32_t>(p2.x - italicShear * p1.y -
+                                                         outlineThickness,
+                                                     p1.y - outlineThickness),
+                   color, sf::Vector2<float32_t>(uv2.x, uv1.y)});
+    vertices.emplace_back(
+        sf::Vertex{position + sf::Vector2<float32_t>(p1.x - italicShear * p2.y -
+                                                         outlineThickness,
+                                                     p2.y - outlineThickness),
+                   color, sf::Vector2<float32_t>(uv1.x, uv2.y)});
+    vertices.emplace_back(
+        sf::Vertex{position + sf::Vector2<float32_t>(p1.x - italicShear * p2.y -
+                                                         outlineThickness,
+                                                     p2.y - outlineThickness),
+                   color, sf::Vector2<float32_t>(uv1.x, uv2.y)});
+    vertices.emplace_back(
+        sf::Vertex{position + sf::Vector2<float32_t>(p2.x - italicShear * p1.y -
+                                                         outlineThickness,
+                                                     p1.y - outlineThickness),
+                   color, sf::Vector2<float32_t>(uv2.x, uv1.y)});
+    vertices.emplace_back(
+        sf::Vertex{position + sf::Vector2<float32_t>(p2.x - italicShear * p2.y -
+                                                         outlineThickness,
+                                                     p2.y - outlineThickness),
+                   color, sf::Vector2<float32_t>(uv2.x, uv2.y)});
 }
 
 TextComp::TextComp()
@@ -172,9 +170,8 @@ TextComp::TextComp(const std::vector<const ChainText *> &chainText,
                    const sf::Font &font, const uint32_t characterSize)
     : sf::Drawable(), sf::Transformable(), m_chainText(chainText),
       m_infoText(&font, characterSize), m_fontsSizes({}), m_widthWrap(-1.0f),
-      m_vertices(sf::PrimitiveType::Triangles),
-      m_outlineVertices(sf::PrimitiveType::Triangles), m_bounds(),
-      m_geometryNeedUpdate(true), m_fontTextureId(0)
+      m_vertices(), m_outlineVertices(), m_bounds(), m_geometryNeedUpdate(true),
+      m_fontTextureId(0)
 {
 }
 
@@ -836,7 +833,7 @@ void TextComp::ensureGeometryUpdate() const
                            curBold)
                 .bounds;
         const float32_t curStrikeThroughOffset =
-            curXBounds.top + (curXBounds.height / 2.f);
+            curXBounds.position.y + (curXBounds.size.y / 2.f);
 
         float32_t curWhitespaceWidth =
             curInfo.getInfoText()
@@ -1133,10 +1130,12 @@ void TextComp::ensureGeometryUpdate() const
                     curBold,
                     curInfo.getInfoText().getInfo<InfoText::Info::THICKNESS>());
 
-            const float32_t left = glyph.bounds.left;
-            const float32_t top = glyph.bounds.top;
-            const float32_t right = glyph.bounds.left + glyph.bounds.width;
-            const float32_t bottom = glyph.bounds.top + glyph.bounds.height;
+            const float32_t left = glyph.bounds.position.x;
+            const float32_t top = glyph.bounds.position.y;
+            const float32_t right =
+                glyph.bounds.position.x + glyph.bounds.size.x;
+            const float32_t bottom =
+                glyph.bounds.position.y + glyph.bounds.size.y;
 
             // Add the outline glyph to the vertices
             TextComp::addGlyphQuad(
@@ -1183,10 +1182,12 @@ void TextComp::ensureGeometryUpdate() const
                 curInfo.getInfoText().getInfo<InfoText::Info::THICKNESS>()) <=
             Func::m_epsilon_f)
         {
-            const float32_t left = glyph.bounds.left;
-            const float32_t top = glyph.bounds.top;
-            const float32_t right = glyph.bounds.left + glyph.bounds.width;
-            const float32_t bottom = glyph.bounds.top + glyph.bounds.height;
+            const float32_t left = glyph.bounds.position.x;
+            const float32_t top = glyph.bounds.position.y;
+            const float32_t right =
+                glyph.bounds.position.x + glyph.bounds.size.x;
+            const float32_t bottom =
+                glyph.bounds.position.y + glyph.bounds.size.y;
 
             minX = std::min(minX, (x + left) - (curItalicShear * bottom));
             maxX = std::max(maxX, (x + right) - (curItalicShear * top));
@@ -1323,10 +1324,10 @@ void TextComp::ensureGeometryUpdate() const
     */
 
     // Update the bounding rectangle
-    m_bounds.left = minX;
-    m_bounds.top = minY;
-    m_bounds.width = maxX - minX;
-    m_bounds.height = maxY - minY;
+    m_bounds.position.x = minX;
+    m_bounds.position.y = minY;
+    m_bounds.size.x = maxX - minX;
+    m_bounds.size.y = maxY - minY;
 }
 
 } // namespace segment_d1

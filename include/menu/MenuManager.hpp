@@ -17,47 +17,40 @@
  *
  */
 
-#ifndef MENULINE_HPP
-#define MENULINE_HPP
+#ifndef MENUMANAGER_HPP
+#define MENUMANAGER_HPP
 
 ////////////////////////////////////////////////////////////
 // Headers
 ////////////////////////////////////////////////////////////
+#include "Singleton.hpp"
+#include "menu/Menu.hpp"
 #include "menu/MenuState.hpp"
-#include "text/TextComp.hpp"
-#include "Animation.hpp"
-#include <functional>
 
 namespace segment_d1
 {
 ////////////////////////////////////////////////////////////
-/// \brief MenuLine class
+/// \brief MenuManager class
 ///
 ////////////////////////////////////////////////////////////
 
-using CallbackType = std::function<MenuState(const MenuState&)>;
-
-class MenuLine final : public sf::Drawable, public Animation
+class MenuManager final : public Singleton<MenuManager>
 {
-public:
-    MenuLine();
-    explicit MenuLine(const std::u32string &str, const sf::Font &font,
-                      const uint32_t characterSize,
-                      const CallbackType &callback);
-    MenuLine(const MenuLine &menuLine) noexcept;
-    MenuLine &operator=(const MenuLine &menuLine);
-    ~MenuLine() override;
+    friend class Singleton<MenuManager>;
 
-    MenuState operator()(const MenuState &menuState);
+public:
+    void update();
+    void draw(sf::RenderTarget &renderTarget,
+              const sf::RenderStates &renderStates) const;
 
 private:
-    ChainText m_chainText;
-    TextComp m_textComp;
-    CallbackType m_callback;
+    MenuManager();
 
-    void draw(sf::RenderTarget &target, sf::RenderStates states) const override;
+    std::vector<Menu> m_menus;
+    Menu *m_currentMenu;
+    Menu *m_previousMenu;
 };
 
 } // namespace segment_d1
 
-#endif // MENULINE_HPP
+#endif // MENUMANAGER_HPP

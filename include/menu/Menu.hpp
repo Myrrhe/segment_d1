@@ -23,6 +23,7 @@
 ////////////////////////////////////////////////////////////
 // Headers
 ////////////////////////////////////////////////////////////
+#include "Animation.hpp"
 #include "MenuLine.hpp"
 
 namespace segment_d1
@@ -31,21 +32,27 @@ namespace segment_d1
 /// \brief Menu class
 ///
 ////////////////////////////////////////////////////////////
-class Menu final : public sf::Drawable
+
+using CallbackType = std::function<MenuState(const MenuState&)>;
+
+class Menu final : public sf::Drawable, public Animation
 {
 public:
     Menu();
-    explicit Menu(const uint64_t id);
+    explicit Menu(const uint64_t id, const CallbackType &callback);
     Menu(const Menu &menu) noexcept;
     Menu &operator=(const Menu &menu);
     ~Menu() override;
 
-    void update();
+    MenuState update();
 
     static void initialize();
 private:
     uint64_t m_id;
+    uint64_t m_index;
     std::vector<MenuLine> m_menuLines;
+
+    CallbackType m_callback;
 
     void draw(sf::RenderTarget &target, sf::RenderStates states) const override;
 

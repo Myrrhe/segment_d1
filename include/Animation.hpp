@@ -17,47 +17,41 @@
  *
  */
 
-#ifndef MENULINE_HPP
-#define MENULINE_HPP
+#ifndef ANIMATION_HPP
+#define ANIMATION_HPP
 
 ////////////////////////////////////////////////////////////
 // Headers
 ////////////////////////////////////////////////////////////
-#include "menu/MenuState.hpp"
-#include "text/TextComp.hpp"
-#include "Animation.hpp"
-#include <functional>
+#include "Enums.hpp"
+#include "GraphicState.hpp"
+#include "TimeTracker.hpp"
+#include <SFML/Graphics.hpp>
 
 namespace segment_d1
 {
 ////////////////////////////////////////////////////////////
-/// \brief MenuLine class
+/// \brief Animation class
 ///
 ////////////////////////////////////////////////////////////
-
-using CallbackType = std::function<MenuState(const MenuState&)>;
-
-class MenuLine final : public sf::Drawable, public Animation
+class Animation : public TimeTracker
 {
 public:
-    MenuLine();
-    explicit MenuLine(const std::u32string &str, const sf::Font &font,
-                      const uint32_t characterSize,
-                      const CallbackType &callback);
-    MenuLine(const MenuLine &menuLine) noexcept;
-    MenuLine &operator=(const MenuLine &menuLine);
-    ~MenuLine() override;
-
-    MenuState operator()(const MenuState &menuState);
+    Animation();
+    Animation(const Interp intert, const float64_t duration,
+              const GraphicState &start, const GraphicState &end);
+    Animation(const Animation &animation);
+    ~Animation() override;
+    Animation &operator=(const Animation &rhs);
+    GraphicState getCurrentGraphicState() const;
 
 private:
-    ChainText m_chainText;
-    TextComp m_textComp;
-    CallbackType m_callback;
-
-    void draw(sf::RenderTarget &target, sf::RenderStates states) const override;
+    Interp m_interp;
+    float64_t m_duration;
+    GraphicState m_start;
+    GraphicState m_end;
 };
 
 } // namespace segment_d1
 
-#endif // MENULINE_HPP
+#endif // ANIMATION_HPP

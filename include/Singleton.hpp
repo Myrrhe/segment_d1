@@ -17,29 +17,29 @@
  *
  */
 
-#ifndef SHADERMANAGER_HPP
-#define SHADERMANAGER_HPP
-#include "StaticObject.hpp"
-#include <SFML/Graphics.hpp>
-#include <map>
+#ifndef SINGLETON_HPP
+#define SINGLETON_HPP
 
 namespace segment_d1
 {
 
-/** \class ShaderManager
-    \brief The engine of the software.
-*/
-class ShaderManager final : public StaticObject
-{
+// Classe de base pour les singletons
+template <typename T>
+class Singleton {
 public:
-    static void initialize();
-    static void terminate();
+    static T& getInstance() {
+        static T instance;
+        return instance;
+    }
 
-    static sf::Shader& getShader(const std::string& key);
-private:
-    static std::map<std::string, sf::Shader, std::less<>> shaders;
+    Singleton(const Singleton&) = delete;
+    Singleton& operator=(const Singleton&) = delete;
+
+protected:
+    Singleton() = default;
+    virtual ~Singleton() = default;
 };
 
 } // namespace segment_d1
 
-#endif // SHADERMANAGER_HPP
+#endif // SINGLETON_HPP

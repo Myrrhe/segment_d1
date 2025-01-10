@@ -18,6 +18,7 @@
  */
 
 #include "TextureManager.hpp"
+#include "Constants.hpp"
 #include "Func.hpp"
 #include "OsManager.hpp"
 #include <cstring>
@@ -54,7 +55,6 @@ uint64_t TextureManager::nbLoad;
 uint64_t TextureManager::nbDele;
 bool TextureManager::isLoading;
 
-const std::string TextureManager::imgExtension = ".png";
 #if USE_SCALER
 const std::string TextureManager::nameGraph = "graphics33";
 #else
@@ -119,47 +119,49 @@ void TextureManager::initializeStateTexture()
 
 const sf::Texture &TextureManager::getTexture(const std::string &str)
 {
-    return (*mapTexture)[str + imgExtension];
+    return (*mapTexture)[str + std::string(ImgExtension)];
 }
 
 const sf::Rect<int32_t> &TextureManager::getTextureRect(const std::string &str)
 {
-    return mapTextureRect[str + imgExtension];
+    return mapTextureRect[str + std::string(ImgExtension)];
 }
 
 const sf::Texture *TextureManager::getPointerTexture(const std::string &str)
 {
-    return &(*mapTexture)[str + imgExtension];
+    return &(*mapTexture)[str + std::string(ImgExtension)];
 }
 
 bool TextureManager::create(const std::string &str, const uint32_t width,
                             const uint32_t height)
 {
-    return (*mapTexture)[str + imgExtension].create(width, height);
+    return (*mapTexture)[str + std::string(ImgExtension)].resize(
+        sf::Vector2<uint32_t>(width, height));
 }
 
 sf::Texture &TextureManager::equalTexture(const std::string &str,
                                           const sf::Texture &newTexture)
 {
-    (*mapTexture)[str + imgExtension] = newTexture;
-    return (*mapTexture)[str + imgExtension];
+    (*mapTexture)[str + std::string(ImgExtension)] = newTexture;
+    return (*mapTexture)[str + std::string(ImgExtension)];
 }
 
 void TextureManager::setTexture(sf::Sprite &sprite, const std::string &str)
 {
-    sprite.setTexture((*mapTexture)[str + imgExtension], false);
+    sprite.setTexture((*mapTexture)[str + std::string(ImgExtension)], false);
 }
 
 void TextureManager::createTexture(const sf::Texture &texture,
                                    const std::string &key)
 {
     const bool newTexture =
-        mapTexture->find(key + imgExtension) == mapTexture->end();
-    (*mapTexture)[key + imgExtension] = texture;
+        mapTexture->find(key + std::string(ImgExtension)) == mapTexture->end();
+    (*mapTexture)[key + std::string(ImgExtension)] = texture;
     if (newTexture)
     {
-        vectorPointerTexture.push_back(&(*mapTexture)[key + imgExtension]);
-        vectorIdTexture.push_back(key + imgExtension);
+        vectorPointerTexture.push_back(
+            &(*mapTexture)[key + std::string(ImgExtension)]);
+        vectorIdTexture.push_back(key + std::string(ImgExtension));
         ++nbTextureTotal;
     }
 }
@@ -181,7 +183,7 @@ void TextureManager::loadOneTexture(const std::string &name)
 
 void TextureManager::deleOneTexture(const std::string &name)
 {
-    (*mapTexture)[name + imgExtension] = sf::Texture();
+    (*mapTexture)[name + std::string(ImgExtension)] = sf::Texture();
     --nbTextureCurrent;
 }
 

@@ -19,14 +19,18 @@
 
 #include "Engine.hpp"
 #include "Func.hpp"
+#include "GraphicState.hpp"
+#include "Logger.hpp"
 #include "OsManager.hpp"
 #include "PathManager.hpp"
 #include "ShaderManager.hpp"
 #include "WindowManager.hpp"
+#include "menu/MenuManager.hpp"
 #include "text/ChainText.hpp"
 #include <cmath>
 #include <iostream>
 #include <istream>
+
 
 namespace segment_d1
 {
@@ -46,6 +50,8 @@ void Engine::launch()
 {
     initialize();
 
+    const GraphicState graphicState = GraphicState() * 0.5;
+
     sf::Font font;
     std::vector<std::string> allFont =
         Func::getDir(PathManager::getPath(PathManager::Dir::FONT));
@@ -63,8 +69,11 @@ void Engine::launch()
         {
             continue;
         }
-        font.loadFromFile(PathManager::getPath(PathManager::Dir::FONT) +
-                          OsManager::Slash + allFont[i]);
+        if (!font.openFromFile(PathManager::getPath(PathManager::Dir::FONT) +
+                               OsManager::Slash + allFont[i]))
+        {
+            Logger().info("Error loading font: " + allFont[i]);
+        }
         break;
     }
     // std::cout << std::stoul("ff0000ff", nullptr, 16) << std::endl;
@@ -80,7 +89,7 @@ void Engine::launch()
     Func::utf8ToUtf32(n1.begin(), n1.end(), std::back_inserter(n2));
     std::string n3 = "";
     Func::utf32ToUtf8(n2.begin(), n2.end(), std::back_inserter(n3));
-    std::basic_string<uint32_t> n4;
+    std::u32string n4;
 
     std::u32string alpha = U"ŽivaŽivaŽivaŽivaŽivaŽivaŽivaŽivaŽiva";
     std::string beta = "";
@@ -96,26 +105,26 @@ void Engine::launch()
     // ChainText cha1 = *LangManager::getText("name1");
     ChainText cha2(U"Živa");
 
-    std::cout << "n1 = " << n1 << std::endl;
+    std::cout << "n1 = " << n1 << "\n";
     // std::wcout << U"n2 = " << n2 << U"\n";
-    std::cout << "n3 = " << n3 << std::endl;
-    std::cout << "beta = " << beta << std::endl;
-    std::cout << "zeta = " << zeta << std::endl;
-    // std::wcout << "n4 = " << n4 << std::endl;
-    // std::wcout << "n5 = " << n5 << std::endl;
+    std::cout << "n3 = " << n3 << "\n";
+    std::cout << "beta = " << beta << "\n";
+    std::cout << "zeta = " << zeta << "\n";
+    // std::wcout << "n4 = " << n4 << "\n";
+    // std::wcout << "n5 = " << n5 << "\n";
     // ChainText cha = std::u32string(U"Živa");
-    // std::cout << "cha.getStr() = " << cha.getStr() << std::endl;
-    // std::cout << "cha.toStr() = " << cha.toStr() << std::endl;
+    // std::cout << "cha.getStr() = " << cha.getStr() << "\n";
+    // std::cout << "cha.toStr() = " << cha.toStr() << "\n";
     textTest = TextComp({&cha, &cha2}, font, 60);
     // textTest.setStyle(InfoText::Style::Underlined);
     textTest.setOutlineThickness(2.0f);
     textTest.setStyle(InfoText::Style::UNDERLINED);
     textTest.setFillColor(sf::Color(255, 0, 0, 127));
     textTest.setOutlineColor(sf::Color(0, 255, 0, 127));
-    textTest.setPosition(100.0f, 100.0f);
+    textTest.setPosition(sf::Vector2<float32_t>(100.0f, 100.0f));
 
-    ShaderManager::getShader("wave")
-        .setUniform("resolution", sf::Vector2f(1920, 1080));
+    ShaderManager::getShader("wave").setUniform("resolution",
+                                                sf::Vector2f(1920, 1080));
 
     ShaderManager::getShader("wave").setUniform("wave_amplitude", 0.02f);
 
@@ -140,6 +149,7 @@ void Engine::getInput()
 void Engine::update()
 {
     WindowManager::manageEvent();
+    MenuManager::getInstance().update();
     if (qEntered)
     {
         WindowManager::close();
@@ -151,13 +161,15 @@ void Engine::draw(sf::RenderTarget &renderTarget)
     renderTarget.clear(sf::Color(0, 0, 0, 255));
     // renderTarget.draw(textTest, sf::RenderStates::Default);
 
-    ShaderManager::getShader("wave")
-        .setUniform("time", s_clock.getElapsedTime().asSeconds());
+    ShaderManager::getShader("wave").setUniform(
+        "time", s_clock.getElapsedTime().asSeconds());
 
-    ShaderManager::getShader("wave")
-        .setUniform("wave_phase", s_clock.getElapsedTime().asSeconds() * 0.1f);
+    ShaderManager::getShader("wave").setUniform(
+        "wave_phase", s_clock.getElapsedTime().asSeconds() * 0.1f);
 
     renderTarget.draw(textTest, &ShaderManager::getShader("wave"));
+
+    MenuManager::getInstance().draw(renderTarget, sf::RenderStates::Default);
 }
 
 } // namespace segment_d1

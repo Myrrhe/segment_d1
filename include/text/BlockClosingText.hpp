@@ -32,7 +32,6 @@ public:
 
     std::u32string toStr() const override;
 
-protected:
 private:
     friend bool operator==(const BlockClosingText &left,
                            const BlockClosingText &right)

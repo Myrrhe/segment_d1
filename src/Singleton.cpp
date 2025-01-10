@@ -17,29 +17,4 @@
  *
  */
 
-#ifndef SHADERMANAGER_HPP
-#define SHADERMANAGER_HPP
-#include "StaticObject.hpp"
-#include <SFML/Graphics.hpp>
-#include <map>
-
-namespace segment_d1
-{
-
-/** \class ShaderManager
-    \brief The engine of the software.
-*/
-class ShaderManager final : public StaticObject
-{
-public:
-    static void initialize();
-    static void terminate();
-
-    static sf::Shader& getShader(const std::string& key);
-private:
-    static std::map<std::string, sf::Shader, std::less<>> shaders;
-};
-
-} // namespace segment_d1
-
-#endif // SHADERMANAGER_HPP
+#include "Singleton.hpp"

@@ -19,6 +19,7 @@
 
 #ifndef FUNC_HPP
 #define FUNC_HPP
+#include "Enums.hpp"
 #include "Global.hpp"
 #include "Quaternion.hpp"
 #include "StaticObject.hpp"
@@ -147,6 +148,8 @@ float32_t operator^(const sf::Vector2<float32_t> &left,
 float64_t operator^(const sf::Vector2<float64_t> &left,
                     const sf::Vector2<float64_t> &right);
 
+sf::Color operator*(const sf::Color &left, const float64_t right);
+
 class Func final : public StaticObject
 {
 public:
@@ -197,16 +200,6 @@ public:
     static constexpr float32_t m_epsilon_f = 0.00000000000000000001f;
 
     static constexpr float32_t m_1_60sf = 1.0f / 60.0f;
-
-    enum class Interp : uint64_t
-    {
-        LIN,
-        ACC,
-        BRA,
-        SIN,
-        SFO,
-        SIN0
-    };
 
     static sf::Vector2<float32_t> flooring(const sf::Vector2<float32_t> &v);
 

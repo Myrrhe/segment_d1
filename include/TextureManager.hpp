@@ -22,6 +22,7 @@
 #include "StaticObject.hpp"
 #include "Types.hpp"
 #include <SFML/Graphics.hpp>
+#include <map>
 #include <memory>
 
 namespace segment_d1
@@ -108,7 +109,6 @@ public:
 
     static constexpr uint32_t nbGroupTextureMax = 14u;
 
-    static const std::string imgExtension;
     static const std::string nameGraph;
 
     static const uint64_t nbTimeUnitLoad;

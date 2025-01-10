@@ -18,6 +18,7 @@
  */
 
 #include "Func.hpp"
+#include <algorithm>
 #include <chrono>
 #include <cmath>
 #include <dirent.h>
@@ -58,20 +59,17 @@ std::ostream &operator<<(std::ostream &os, const sf::Vector2<float64_t> &right)
 
 std::ostream &operator<<(std::ostream &os, const sf::Rect<int32_t> &right)
 {
-    return os << '(' << right.left << ", " << right.top << ", " << right.width
-              << ", " << right.height << ')';
+    return os << '(' << right.position << ", " << right.size << ')';
 }
 
 std::ostream &operator<<(std::ostream &os, const sf::Rect<float32_t> &right)
 {
-    return os << '(' << right.left << ", " << right.top << ", " << right.width
-              << ", " << right.height << ')';
+    return os << '(' << right.position << ", " << right.size << ')';
 }
 
 std::ostream &operator<<(std::ostream &os, const sf::Rect<float64_t> &right)
 {
-    return os << '(' << right.left << ", " << right.top << ", " << right.width
-              << ", " << right.height << ')';
+    return os << '(' << right.position << ", " << right.size << ')';
 }
 
 std::ostream &operator<<(std::ostream &os, const sf::Transform &right)
@@ -144,288 +142,353 @@ std::ostream &operator<<(std::ostream &os, const std::vector<float64_t> &right)
 sf::Rect<int32_t> operator|(const sf::Rect<int32_t> &left,
                             const sf::Rect<int32_t> &right)
 {
-    const auto leftTopCorner = sf::Vector2<int32_t>(
-        std::min(left.left, right.left), std::min(left.top, right.top));
+    const auto leftTopCorner =
+        sf::Vector2<int32_t>(std::min(left.position.x, right.position.x),
+                             std::min(left.position.y, right.position.y));
     return sf::Rect<int32_t>(
-        leftTopCorner.x, leftTopCorner.y,
-        std::max(left.left + left.width, right.left + right.width) -
-            leftTopCorner.x,
-        std::max(left.top + left.height, right.top + right.height) -
-            leftTopCorner.y);
+        sf::Vector2<int32_t>(leftTopCorner.x, leftTopCorner.y),
+        sf::Vector2<int32_t>(std::max(left.position.x + left.size.x,
+                                      right.position.x + right.size.x) -
+                                 leftTopCorner.x,
+                             std::max(left.position.y + left.size.y,
+                                      right.position.y + right.size.y) -
+                                 leftTopCorner.y));
 }
 
 sf::Rect<float32_t> operator|(const sf::Rect<float32_t> &left,
                               const sf::Rect<float32_t> &right)
 {
-    const auto leftTopCorner = sf::Vector2<float32_t>(
-        std::min(left.left, right.left), std::min(left.top, right.top));
+    const auto leftTopCorner =
+        sf::Vector2<float32_t>(std::min(left.position.x, right.position.x),
+                               std::min(left.position.y, right.position.y));
     return sf::Rect<float32_t>(
-        leftTopCorner.x, leftTopCorner.y,
-        std::max(left.left + left.width, right.left + right.width) -
-            leftTopCorner.x,
-        std::max(left.top + left.height, right.top + right.height) -
-            leftTopCorner.y);
+        sf::Vector2<float32_t>(leftTopCorner.x, leftTopCorner.y),
+        sf::Vector2<float32_t>(std::max(left.position.x + left.size.x,
+                                        right.position.x + right.size.x) -
+                                   leftTopCorner.x,
+                               std::max(left.position.y + left.size.y,
+                                        right.position.y + right.size.y) -
+                                   leftTopCorner.y));
 }
 
 sf::Rect<float64_t> operator|(const sf::Rect<float64_t> &left,
                               const sf::Rect<float64_t> &right)
 {
-    const auto leftTopCorner = sf::Vector2<float64_t>(
-        std::min(left.left, right.left), std::min(left.top, right.top));
+    const auto leftTopCorner =
+        sf::Vector2<float64_t>(std::min(left.position.x, right.position.x),
+                               std::min(left.position.y, right.position.y));
     return sf::Rect<float64_t>(
-        leftTopCorner.x, leftTopCorner.y,
-        std::max(left.left + left.width, right.left + right.width) -
-            leftTopCorner.x,
-        std::max(left.top + left.height, right.top + right.height) -
-            leftTopCorner.y);
+        sf::Vector2<float64_t>(leftTopCorner.x, leftTopCorner.y),
+        sf::Vector2<float64_t>(std::max(left.position.x + left.size.x,
+                                        right.position.x + right.size.x) -
+                                   leftTopCorner.x,
+                               std::max(left.position.y + left.size.y,
+                                        right.position.y + right.size.y) -
+                                   leftTopCorner.y));
 }
 
 sf::Rect<int32_t> operator+(const sf::Rect<int32_t> &left,
                             const sf::Vector2<int32_t> &right)
 {
-    return sf::Rect<int32_t>(left.left + right.x, left.top + right.y,
-                             left.width, left.height);
+    return sf::Rect<int32_t>(sf::Vector2<int32_t>(left.position.x + right.x,
+                                                  left.position.y + right.y),
+                             sf::Vector2<int32_t>(left.size.x, left.size.y));
 }
 
 sf::Rect<float32_t> operator+(const sf::Rect<float32_t> &left,
                               const sf::Vector2<float32_t> &right)
 {
-    return sf::Rect<float32_t>(left.left + right.x, left.top + right.y,
-                               left.width, left.height);
+    return sf::Rect<float32_t>(
+        sf::Vector2<float32_t>(left.position.x + right.x,
+                               left.position.y + right.y),
+        sf::Vector2<float32_t>(left.size.x, left.size.y));
 }
 
 sf::Rect<float64_t> operator+(const sf::Rect<float64_t> &left,
                               const sf::Vector2<float64_t> &right)
 {
-    return sf::Rect<float64_t>(left.left + right.x, left.top + right.y,
-                               left.width, left.height);
+    return sf::Rect<float64_t>(
+        sf::Vector2<float64_t>(left.position.x + right.x,
+                               left.position.y + right.y),
+        sf::Vector2<float64_t>(left.size.x, left.size.y));
 }
 
 sf::Rect<int32_t> &operator+=(sf::Rect<int32_t> &left,
                               const sf::Vector2<int32_t> &right)
 {
-    return left = sf::Rect<int32_t>(left.left + right.x, left.top + right.y,
-                                    left.width, left.height);
+    return left = sf::Rect<int32_t>(
+               sf::Vector2<int32_t>(left.position.x + right.x,
+                                    left.position.y + right.y),
+               sf::Vector2<int32_t>(left.size.x, left.size.y));
 }
 
 sf::Rect<float32_t> &operator+=(sf::Rect<float32_t> &left,
                                 const sf::Vector2<float32_t> &right)
 {
-    return left = sf::Rect<float32_t>(left.left + right.x, left.top + right.y,
-                                      left.width, left.height);
+    return left = sf::Rect<float32_t>(
+               sf::Vector2<float32_t>(left.position.x + right.x,
+                                      left.position.y + right.y),
+               sf::Vector2<float32_t>(left.size.x, left.size.y));
 }
 
 sf::Rect<float64_t> &operator+=(sf::Rect<float64_t> &left,
                                 const sf::Vector2<float64_t> &right)
 {
-    return left = sf::Rect<float64_t>(left.left + right.x, left.top + right.y,
-                                      left.width, left.height);
+    return left = sf::Rect<float64_t>(
+               sf::Vector2<float64_t>(left.position.x + right.x,
+                                      left.position.y + right.y),
+               sf::Vector2<float64_t>(left.size.x, left.size.y));
 }
 
 sf::Rect<int32_t> operator-(const sf::Rect<int32_t> &left,
                             const sf::Vector2<int32_t> &right)
 {
-    return sf::Rect<int32_t>(left.left - right.x, left.top - right.y,
-                             left.width, left.height);
+    return sf::Rect<int32_t>(sf::Vector2<int32_t>(left.position.x - right.x,
+                                                  left.position.y - right.y),
+                             sf::Vector2<int32_t>(left.size.x, left.size.y));
 }
 
 sf::Rect<float32_t> operator-(const sf::Rect<float32_t> &left,
                               const sf::Vector2<float32_t> &right)
 {
-    return sf::Rect<float32_t>(left.left - right.x, left.top - right.y,
-                               left.width, left.height);
+    return sf::Rect<float32_t>(
+        sf::Vector2<float32_t>(left.position.x - right.x,
+                               left.position.y - right.y),
+        sf::Vector2<float32_t>(left.size.x, left.size.y));
 }
 
 sf::Rect<float64_t> operator-(const sf::Rect<float64_t> &left,
                               const sf::Vector2<float64_t> &right)
 {
-    return sf::Rect<float64_t>(left.left - right.x, left.top - right.y,
-                               left.width, left.height);
+    return sf::Rect<float64_t>(
+        sf::Vector2<float64_t>(left.position.x - right.x,
+                               left.position.y - right.y),
+        sf::Vector2<float64_t>(left.size.x, left.size.y));
 }
 
 sf::Rect<int32_t> &operator-=(sf::Rect<int32_t> &left,
                               const sf::Vector2<int32_t> &right)
 {
-    return left = sf::Rect<int32_t>(left.left - right.x, left.top - right.y,
-                                    left.width, left.height);
+    return left = sf::Rect<int32_t>(
+               sf::Vector2<int32_t>(left.position.x - right.x,
+                                    left.position.y - right.y),
+               sf::Vector2<int32_t>(left.size.x, left.size.y));
 }
 
 sf::Rect<float32_t> &operator-=(sf::Rect<float32_t> &left,
                                 const sf::Vector2<float32_t> &right)
 {
-    return left = sf::Rect<float32_t>(left.left - right.x, left.top - right.y,
-                                      left.width, left.height);
+    return left = sf::Rect<float32_t>(
+               sf::Vector2<float32_t>(left.position.x - right.x,
+                                      left.position.y - right.y),
+               sf::Vector2<float32_t>(left.size.x, left.size.y));
 }
 
 sf::Rect<float64_t> &operator-=(sf::Rect<float64_t> &left,
                                 const sf::Vector2<float64_t> &right)
 {
-    return left = sf::Rect<float64_t>(left.left - right.x, left.top - right.y,
-                                      left.width, left.height);
+    return left = sf::Rect<float64_t>(
+               sf::Vector2<float64_t>(left.position.x - right.x,
+                                      left.position.y - right.y),
+               sf::Vector2<float64_t>(left.size.x, left.size.y));
 }
 
 sf::Rect<int32_t> operator*(const sf::Rect<int32_t> &left, const int32_t right)
 {
-    return sf::Rect<int32_t>(left.left, left.top, left.width * right,
-                             left.height * right);
+    return sf::Rect<int32_t>(
+        sf::Vector2<int32_t>(left.position.x, left.position.y),
+        sf::Vector2<int32_t>(left.size.x * right, left.size.y * right));
 }
 
 sf::Rect<float32_t> operator*(const sf::Rect<float32_t> &left,
                               const float32_t right)
 {
-    return sf::Rect<float32_t>(left.left, left.top, left.width * right,
-                               left.height * right);
+    return sf::Rect<float32_t>(
+        sf::Vector2<float32_t>(left.position.x, left.position.y),
+        sf::Vector2<float32_t>(left.size.x * right, left.size.y * right));
 }
 
 sf::Rect<float64_t> operator*(const sf::Rect<float64_t> &left,
                               const float64_t right)
 {
-    return sf::Rect<float64_t>(left.left, left.top, left.width * right,
-                               left.height * right);
+    return sf::Rect<float64_t>(
+        sf::Vector2<float64_t>(left.position.x, left.position.y),
+        sf::Vector2<float64_t>(left.size.x * right, left.size.y * right));
 }
 
 sf::Rect<int32_t> &operator*=(sf::Rect<int32_t> &left, const int32_t right)
 {
-    return left = sf::Rect<int32_t>(left.left, left.top, left.width * right,
-                                    left.height * right);
+    return left = sf::Rect<int32_t>(
+               sf::Vector2<int32_t>(left.position.x, left.position.y),
+               sf::Vector2<int32_t>(left.size.x * right, left.size.y * right));
 }
 
 sf::Rect<float32_t> &operator*=(sf::Rect<float32_t> &left,
                                 const float32_t right)
 {
-    return left = sf::Rect<float32_t>(left.left, left.top, left.width * right,
-                                      left.height * right);
+    return left = sf::Rect<float32_t>(
+               sf::Vector2<float32_t>(left.position.x, left.position.y),
+               sf::Vector2<float32_t>(left.size.x * right,
+                                      left.size.y * right));
 }
 
 sf::Rect<float64_t> &operator*=(sf::Rect<float64_t> &left,
                                 const float64_t right)
 {
-    return left = sf::Rect<float64_t>(left.left, left.top, left.width * right,
-                                      left.height * right);
+    return left = sf::Rect<float64_t>(
+               sf::Vector2<float64_t>(left.position.x, left.position.y),
+               sf::Vector2<float64_t>(left.size.x * right,
+                                      left.size.y * right));
 }
 
 sf::Rect<int32_t> operator/(const sf::Rect<int32_t> &left, const int32_t right)
 {
-    return sf::Rect<int32_t>(left.left, left.top, left.width / right,
-                             left.height / right);
+    return sf::Rect<int32_t>(
+        sf::Vector2<int32_t>(left.position.x, left.position.y),
+        sf::Vector2<int32_t>(left.size.x / right, left.size.y / right));
 }
 
 sf::Rect<float32_t> operator/(const sf::Rect<float32_t> &left,
                               const float32_t right)
 {
-    return sf::Rect<float32_t>(left.left, left.top, left.width / right,
-                               left.height / right);
+    return sf::Rect<float32_t>(
+        sf::Vector2<float32_t>(left.position.x, left.position.y),
+        sf::Vector2<float32_t>(left.size.x / right, left.size.y / right));
 }
 
 sf::Rect<float64_t> operator/(const sf::Rect<float64_t> &left,
                               const float64_t right)
 {
-    return sf::Rect<float64_t>(left.left, left.top, left.width / right,
-                               left.height / right);
+    return sf::Rect<float64_t>(
+        sf::Vector2<float64_t>(left.position.x, left.position.y),
+        sf::Vector2<float64_t>(left.size.x / right, left.size.y / right));
 }
 
 sf::Rect<int32_t> &operator/=(sf::Rect<int32_t> &left, const int32_t right)
 {
-    return left = sf::Rect<int32_t>(left.left, left.top, left.width / right,
-                                    left.height / right);
+    return left = sf::Rect<int32_t>(
+               sf::Vector2<int32_t>(left.position.x, left.position.y),
+               sf::Vector2<int32_t>(left.size.x / right, left.size.y / right));
 }
 
 sf::Rect<float32_t> &operator/=(sf::Rect<float32_t> &left,
                                 const float32_t right)
 {
-    return left = sf::Rect<float32_t>(left.left, left.top, left.width / right,
-                                      left.height / right);
+    return left = sf::Rect<float32_t>(
+               sf::Vector2<float32_t>(left.position.x, left.position.y),
+               sf::Vector2<float32_t>(left.size.x / right,
+                                      left.size.y / right));
 }
 
 sf::Rect<float64_t> &operator/=(sf::Rect<float64_t> &left,
                                 const float64_t right)
 {
-    return left = sf::Rect<float64_t>(left.left, left.top, left.width / right,
-                                      left.height / right);
+    return left = sf::Rect<float64_t>(
+               sf::Vector2<float64_t>(left.position.x, left.position.y),
+               sf::Vector2<float64_t>(left.size.x / right,
+                                      left.size.y / right));
 }
 
 sf::Rect<int32_t> operator*(const sf::Rect<int32_t> &left,
                             const sf::Vector2<int32_t> &right)
 {
-    return sf::Rect<int32_t>(left.left, left.top, left.width * right.x,
-                             left.height * right.y);
+    return sf::Rect<int32_t>(
+        sf::Vector2<int32_t>(left.position.x, left.position.y),
+        sf::Vector2<int32_t>(left.size.x * right.x, left.size.y * right.y));
 }
 
 sf::Rect<float32_t> operator*(const sf::Rect<float32_t> &left,
                               const sf::Vector2<float32_t> &right)
 {
-    return sf::Rect<float32_t>(left.left, left.top, left.width * right.x,
-                               left.height * right.y);
+    return sf::Rect<float32_t>(
+        sf::Vector2<float32_t>(left.position.x, left.position.y),
+        sf::Vector2<float32_t>(left.size.x * right.x, left.size.y * right.y));
 }
 
 sf::Rect<float64_t> operator*(const sf::Rect<float64_t> &left,
                               const sf::Vector2<float64_t> &right)
 {
-    return sf::Rect<float64_t>(left.left, left.top, left.width * right.x,
-                               left.height * right.y);
+    return sf::Rect<float64_t>(
+        sf::Vector2<float64_t>(left.position.x, left.position.y),
+        sf::Vector2<float64_t>(left.size.x * right.x, left.size.y * right.y));
 }
 
 sf::Rect<int32_t> &operator*=(sf::Rect<int32_t> &left,
                               const sf::Vector2<int32_t> &right)
 {
-    return left = sf::Rect<int32_t>(left.left, left.top, left.width * right.x,
-                                    left.height * right.y);
+    return left = sf::Rect<int32_t>(
+               sf::Vector2<int32_t>(left.position.x, left.position.y),
+               sf::Vector2<int32_t>(left.size.x * right.x,
+                                    left.size.y * right.y));
 }
 
 sf::Rect<float32_t> &operator*=(sf::Rect<float32_t> &left,
                                 const sf::Vector2<float32_t> &right)
 {
-    return left = sf::Rect<float32_t>(left.left, left.top, left.width * right.x,
-                                      left.height * right.y);
+    return left = sf::Rect<float32_t>(
+               sf::Vector2<float32_t>(left.position.x, left.position.y),
+               sf::Vector2<float32_t>(left.size.x * right.x,
+                                      left.size.y * right.y));
 }
 
 sf::Rect<float64_t> &operator*=(sf::Rect<float64_t> &left,
                                 const sf::Vector2<float64_t> &right)
 {
-    return left = sf::Rect<float64_t>(left.left, left.top, left.width * right.x,
-                                      left.height * right.y);
+    return left = sf::Rect<float64_t>(
+               sf::Vector2<float64_t>(left.position.x, left.position.y),
+               sf::Vector2<float64_t>(left.size.x * right.x,
+                                      left.size.y * right.y));
 }
 
 sf::Rect<int32_t> operator/(const sf::Rect<int32_t> &left,
                             const sf::Vector2<int32_t> &right)
 {
-    return sf::Rect<int32_t>(left.left, left.top, left.width / right.x,
-                             left.height / right.y);
+    return sf::Rect<int32_t>(
+        sf::Vector2<int32_t>(left.position.x, left.position.y),
+        sf::Vector2<int32_t>(left.size.x / right.x, left.size.y / right.y));
 }
 
 sf::Rect<float32_t> operator/(const sf::Rect<float32_t> &left,
                               const sf::Vector2<float32_t> &right)
 {
-    return sf::Rect<float32_t>(left.left, left.top, left.width / right.x,
-                               left.height / right.y);
+    return sf::Rect<float32_t>(
+        sf::Vector2<float32_t>(left.position.x, left.position.y),
+        sf::Vector2<float32_t>(left.size.x / right.x, left.size.y / right.y));
 }
 
 sf::Rect<float64_t> operator/(const sf::Rect<float64_t> &left,
                               const sf::Vector2<float64_t> &right)
 {
-    return sf::Rect<float64_t>(left.left, left.top, left.width / right.x,
-                               left.height / right.y);
+    return sf::Rect<float64_t>(
+        sf::Vector2<float64_t>(left.position.x, left.position.y),
+        sf::Vector2<float64_t>(left.size.x / right.x, left.size.y / right.y));
 }
 
 sf::Rect<int32_t> &operator/=(sf::Rect<int32_t> &left,
                               const sf::Vector2<int32_t> &right)
 {
-    return left = sf::Rect<int32_t>(left.left, left.top, left.width / right.x,
-                                    left.height / right.y);
+    return left = sf::Rect<int32_t>(
+               sf::Vector2<int32_t>(left.position.x, left.position.y),
+               sf::Vector2<int32_t>(left.size.x / right.x,
+                                    left.size.y / right.y));
 }
 
 sf::Rect<float32_t> &operator/=(sf::Rect<float32_t> &left,
                                 const sf::Vector2<float32_t> &right)
 {
-    return left = sf::Rect<float32_t>(left.left, left.top, left.width / right.x,
-                                      left.height / right.y);
+    return left = sf::Rect<float32_t>(
+               sf::Vector2<float32_t>(left.position.x, left.position.y),
+               sf::Vector2<float32_t>(left.size.x / right.x,
+                                      left.size.y / right.y));
 }
 
 sf::Rect<float64_t> &operator/=(sf::Rect<float64_t> &left,
                                 const sf::Vector2<float64_t> &right)
 {
-    return left = sf::Rect<float64_t>(left.left, left.top, left.width / right.x,
-                                      left.height / right.y);
+    return left = sf::Rect<float64_t>(
+               sf::Vector2<float64_t>(left.position.x, left.position.y),
+               sf::Vector2<float64_t>(left.size.x / right.x,
+                                      left.size.y / right.y));
 }
 
 int32_t operator*(const sf::Vector2<int32_t> &left,
@@ -468,6 +531,14 @@ float64_t operator^(const sf::Vector2<float64_t> &left,
                     const sf::Vector2<float64_t> &right)
 {
     return (left.x * right.y) - (left.y * right.x);
+}
+
+sf::Color operator*(const sf::Color &left, const float64_t right)
+{
+    return sf::Color(static_cast<uint8_t>(left.r * right),
+                     static_cast<uint8_t>(left.g * right),
+                     static_cast<uint8_t>(left.b * right),
+                     static_cast<uint8_t>(left.a * right));
 }
 
 sf::Vector2<float32_t> Func::flooring(const sf::Vector2<float32_t> &v)
@@ -669,14 +740,14 @@ sf::Color Func::colorBalance(const sf::Color &color1, const sf::Color &color2,
 {
     const float64_t interpCoeff = getCoeff(coeff, interp, true);
     const float64_t oneMinusCoeff = 1.0 - interpCoeff;
-    return sf::Color(static_cast<sf::Uint8>((color1.r * interpCoeff) +
-                                            (color2.r * oneMinusCoeff)),
-                     static_cast<sf::Uint8>((color1.g * interpCoeff) +
-                                            (color2.g * oneMinusCoeff)),
-                     static_cast<sf::Uint8>((color1.b * interpCoeff) +
-                                            (color2.b * oneMinusCoeff)),
-                     static_cast<sf::Uint8>((color1.a * interpCoeff) +
-                                            (color2.a * oneMinusCoeff)));
+    return sf::Color(static_cast<uint8_t>((color1.r * interpCoeff) +
+                                          (color2.r * oneMinusCoeff)),
+                     static_cast<uint8_t>((color1.g * interpCoeff) +
+                                          (color2.g * oneMinusCoeff)),
+                     static_cast<uint8_t>((color1.b * interpCoeff) +
+                                          (color2.b * oneMinusCoeff)),
+                     static_cast<uint8_t>((color1.a * interpCoeff) +
+                                          (color2.a * oneMinusCoeff)));
 }
 
 std::string Func::getStringHourPrecise()
@@ -799,10 +870,10 @@ std::vector<std::u32string> Func::split(const std::u32string_view &s,
     const std::size_t delimLen = delim.length();
     while ((posEnd = s.find(delim, posStart)) != std::u32string::npos)
     {
-        res.emplace_back(s.substr(posStart, posEnd - posStart));
+        (void)res.emplace_back(s.substr(posStart, posEnd - posStart));
         posStart = posEnd + delimLen;
     }
-    res.emplace_back(s.substr(posStart, std::u32string::npos));
+    (void)res.emplace_back(s.substr(posStart, std::u32string::npos));
     return res;
 }
 
@@ -861,7 +932,7 @@ uint64_t Func::power(const uint64_t base, const uint64_t exponent)
 
 sf::String Func::stringTosfString(const std::string_view &str)
 { // Can be useful to display accents properly
-    std::basic_string<sf::Uint32> utf32str = {};
+    std::u32string utf32str = {};
     sf::Utf8::toUtf32(str.begin(), str.end(), std::back_inserter(utf32str));
     return sf::String(utf32str);
 }
@@ -873,14 +944,14 @@ sf::String Func::evaluateSpecialChars(const sf::String &str)
     const std::size_t sizeStr = str.getSize();
     while (i < sizeStr)
     {
-        if (const sf::Uint32 c = str[i]; '\\' == c)
+        if (const char32_t c = str[i]; '\\' == c)
         {
             ++i;
-            const sf::Uint32 n = str[i];
+            const char32_t n = str[i];
             switch (n)
             {
             case '\\': {
-                res += n;
+                res += sf::String(n);
                 break;
             }
             case 'n': {
@@ -901,15 +972,16 @@ sf::String Func::evaluateSpecialChars(const sf::String &str)
             }
             default: {
                 DEBUG_LOG("default reached");
-                std::cerr << "Error: invalid special char found : " << c << n
-                          << "\n";
+                std::cerr << "Error: invalid special char found : "
+                          << static_cast<uint32_t>(c) << ", "
+                          << static_cast<uint32_t>(n) << "\n";
                 break;
             }
             }
         }
         else
         {
-            res += c;
+            res += sf::String(c);
         }
         ++i;
     }
@@ -1170,12 +1242,14 @@ std::u32string Func::fTo32Str(float32_t n)
 
 sf::Rect<int32_t> Func::getTextureRect(const sf::Texture *const texture)
 {
-    auto res = sf::Rect<int32_t>(0, 0, 0, 0);
+    auto res = sf::Rect<int32_t>(sf::Vector2<int32_t>(0, 0),
+                                 sf::Vector2<int32_t>(0, 0));
     if (nullptr != texture)
     {
-        res =
-            sf::Rect<int32_t>(0, 0, static_cast<int32_t>(texture->getSize().x),
-                              static_cast<int32_t>(texture->getSize().y));
+        res = sf::Rect<int32_t>(
+            sf::Vector2<int32_t>(0, 0),
+            sf::Vector2<int32_t>(static_cast<int32_t>(texture->getSize().x),
+                                 static_cast<int32_t>(texture->getSize().y)));
     }
     return res;
 }
@@ -1558,14 +1632,17 @@ sf::Texture Func::loadTexture(const std::string &path,
 {
     sf::Image image;
     sf::Texture texture;
-    image.loadFromFile(path);
-    texture.loadFromImage(image, area);
+    if (image.loadFromFile(path) && texture.loadFromImage(image, false, area))
+    {
+        // Nothing to do
+    }
     return texture;
 }
 
 sf::Texture Func::loadTexture(const std::string &path)
 {
-    return loadTexture(path, sf::Rect<int32_t>(0, 0, 0, 0));
+    return loadTexture(path, sf::Rect<int32_t>(sf::Vector2<int32_t>(0, 0),
+                                               sf::Vector2<int32_t>(0, 0)));
 }
 
 } // namespace segment_d1

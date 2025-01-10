@@ -17,36 +17,33 @@
  *
  */
 
-#ifndef MENUSTATE_HPP
-#define MENUSTATE_HPP
-
-////////////////////////////////////////////////////////////
-// Headers
-////////////////////////////////////////////////////////////
-#include <cstdint>
+#include "Animation.hpp"
 
 namespace segment_d1
 {
-////////////////////////////////////////////////////////////
-/// \brief MenuState class
-///
-////////////////////////////////////////////////////////////
-class MenuState final
+Animation::Animation()
+    : TimeTracker(), m_interp(Interp::LIN), m_duration(0.0),
+      m_start(GraphicState()), m_end(GraphicState())
 {
-public:
-    MenuState();
-    MenuState(const bool navigation, const uint64_t id);
-    MenuState(const MenuState &menuState) noexcept;
-    MenuState &operator=(const MenuState &menuState);
-    ~MenuState();
+}
 
-    [[nodiscard]] bool isNavigation() const;
-    [[nodiscard]] uint64_t getId() const;
-private:
-    bool m_navigation;
-    uint64_t m_id;
-};
+Animation::Animation(const Interp intert, const float64_t duration,
+                     const GraphicState &start, const GraphicState &end)
+    : TimeTracker(), m_interp(intert), m_duration(duration), m_start(start),
+      m_end(end)
+{
+}
+
+Animation::Animation(const Animation &animation) = default;
+
+Animation::~Animation() = default;
+
+Animation &Animation::operator=(const Animation &rhs) = default;
+
+GraphicState Animation::getCurrentGraphicState() const
+{
+    return m_start.balance(
+        m_end, Func::getCoeff(getWatch(), m_duration, m_interp, true));
+}
 
 } // namespace segment_d1
-
-#endif // MENUSTATE_HPP

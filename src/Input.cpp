@@ -325,7 +325,7 @@ Input::Input(const std::string_view &str)
     }
     else if (str == "Quote")
     {
-        key = sf::Keyboard::Key::Quote;
+        key = sf::Keyboard::Key::Apostrophe;
         typeInput = TypeInput::KEYBOARD;
     }
     else if (str == "Slash")
@@ -585,12 +585,12 @@ Input::Input(const std::string_view &str)
     }
     else if (str == "XButton1")
     {
-        button = sf::Mouse::Button::XButton1;
+        button = sf::Mouse::Button::Extra1;
         typeInput = TypeInput::MOUSE;
     }
     else if (str == "XButton2")
     {
-        button = sf::Mouse::Button::XButton2;
+        button = sf::Mouse::Button::Extra2;
         typeInput = TypeInput::MOUSE;
     }
     else if (str == "XAxis-")
@@ -962,7 +962,7 @@ std::string Input::toString() const
         {
             res = "Period";
         }
-        else if (key == sf::Keyboard::Key::Quote)
+        else if (key == sf::Keyboard::Key::Apostrophe)
         {
             res = "Quote";
         }
@@ -1173,7 +1173,7 @@ std::string Input::toString() const
         {
             res = "MiddleMouse";
         }
-        else if (button == sf::Mouse::Button::XButton2)
+        else if (button == sf::Mouse::Button::Extra1)
         {
             res = "XButton1";
         }

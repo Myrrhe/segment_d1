@@ -21,10 +21,10 @@
 
 namespace segment_d1
 {
-MenuLine::MenuLine() : m_chainText(""), m_textComp(), m_callback(nullptr) {};
+MenuLine::MenuLine() : m_chainText(""), m_textComp(), m_callback(nullptr){};
 
 MenuLine::MenuLine(const std::u32string &str, const sf::Font &font,
-                   const uint32_t characterSize, CallbackType callback)
+                   const uint32_t characterSize, const CallbackType &callback)
     : m_chainText(str), m_textComp({&m_chainText}, font, characterSize),
       m_callback(callback)
 {
@@ -36,7 +36,13 @@ MenuLine &MenuLine::operator=(const MenuLine &menuLine) = default;
 
 MenuLine::~MenuLine() = default;
 
-void MenuLine::draw(sf::RenderTarget &target, sf::RenderStates states) const
+MenuState MenuLine::operator()(const MenuState &menuState)
+{
+    return m_callback(menuState);
+}
+
+void MenuLine::draw(sf::RenderTarget &target,
+                    sf::RenderStates states) const // NOSONAR
 {
     target.draw(m_textComp, states);
 }

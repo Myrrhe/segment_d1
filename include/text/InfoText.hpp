@@ -26,11 +26,11 @@ public:
 
     enum class Style : uint64_t
     {
-    REGULAR = 0,           ///< Regular characters, no style
-    BOLD = 1 << 0,         ///< Bold characters
-    ITALIC = 1 << 1,       ///< Italic characters
-    UNDERLINED = 1 << 2,   ///< Underlined characters
-    STRIKETHROUGH = 1 << 3 ///< Strike through characters
+        REGULAR = 0,           ///< Regular characters, no style
+        BOLD = 1 << 0,         ///< Bold characters
+        ITALIC = 1 << 1,       ///< Italic characters
+        UNDERLINED = 1 << 2,   ///< Underlined characters
+        STRIKETHROUGH = 1 << 3 ///< Strike through characters
     };
 
     /** Default constructor */
@@ -49,7 +49,7 @@ public:
     /** Default destructor */
     ~InfoText();
 
-    void setFont(const sf::Font * const newFont);
+    void setFont(const sf::Font *const newFont);
     void setCharSize(const uint64_t newCharSize);
     void setLetterSpacing(const std::tuple<bool, float32_t> &newLetterSpacing);
     void setLineSpacingFactor(const float32_t newLineSpacingFactor);
@@ -71,7 +71,8 @@ public:
 
     template <Info typeCode> typename Typer<typeCode>::Type getInfo() const;
 
-    template <Info typeCode> void setInfo(typename Typer<typeCode>::Type const t);
+    template <Info typeCode>
+    void setInfo(typename Typer<typeCode>::Type const t);
 
     std::u32string getValStr(const Info i) const;
 

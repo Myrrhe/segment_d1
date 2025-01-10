@@ -30,11 +30,11 @@ class MouseWheel final : public StaticObject
 public:
     static void initialize();
 
-    [[nodiscard]] static int32_t getDeltaWheel();
-    static void setDeltaWheel(const int32_t newDeltaWheel);
+    [[nodiscard]] static float32_t getDeltaWheel();
+    static void setDeltaWheel(const float32_t newDeltaWheel);
 
 private:
-    static int32_t deltaWheel;
+    static float32_t deltaWheel;
 };
 
 } // namespace segment_d1

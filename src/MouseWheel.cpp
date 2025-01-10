@@ -21,19 +21,19 @@
 
 namespace segment_d1 {
 
-int32_t MouseWheel::deltaWheel;
+float32_t MouseWheel::deltaWheel;
 
 void MouseWheel::initialize()
 {
     deltaWheel = 0;
 }
 
-int32_t MouseWheel::getDeltaWheel()
+float32_t MouseWheel::getDeltaWheel()
 {
     return deltaWheel;
 }
 
-void MouseWheel::setDeltaWheel(const int32_t newDeltaWheel)
+void MouseWheel::setDeltaWheel(const float32_t newDeltaWheel)
 {
     deltaWheel = newDeltaWheel;
 }

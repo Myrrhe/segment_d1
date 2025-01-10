@@ -31,9 +31,6 @@ public:
     bool isEmpty() const;
     const NodeText *operator[](const std::size_t i) const;
 
-    bool operator==(const ChainText &right) const;
-    bool operator!=(const ChainText &right) const;
-
     uint64_t getNbChar() const;
     uint64_t getNbChar(const uint64_t i) const;
 
@@ -42,6 +39,28 @@ public:
     std::u32string toStr() const;
 private:
     bool parseString(const std::u32string &str, const bool setNodes);
+
+    friend bool operator==(const ChainText &left, const ChainText &right)
+    {
+        bool res = true;
+        if (left.nodes.size() != right.nodes.size())
+        {
+            res = false;
+        }
+        if (res)
+        {
+            const std::size_t nodesSize = left.nodes.size();
+            for (std::size_t i = 0; i < nodesSize; ++i)
+            {
+                res = res && (*left.nodes[i]).isEqual(*right.nodes[i]);
+            }
+        }
+        return res;
+    }
+    friend bool operator!=(const ChainText &left, const ChainText &right)
+    {
+        return !(left == right);
+    }
 
     std::vector<NodeText *> nodes;
     std::vector<LeafText> leafs;

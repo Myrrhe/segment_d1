@@ -1,5 +1,5 @@
 /*
- * The engine of the watch.
+ * A basic function library.
  * Copyright (C) 2020  Myrrhe <email>
  *
  * This program is free software: you can redistribute it and/or modify
@@ -17,29 +17,23 @@
  *
  */
 
-#ifndef SHADERMANAGER_HPP
-#define SHADERMANAGER_HPP
-#include "StaticObject.hpp"
-#include <SFML/Graphics.hpp>
-#include <map>
+#ifndef ENUMS_HPP
+#define ENUMS_HPP
+
+#include <cstdint>
+#include <string>
 
 namespace segment_d1
 {
-
-/** \class ShaderManager
-    \brief The engine of the software.
-*/
-class ShaderManager final : public StaticObject
-{
-public:
-    static void initialize();
-    static void terminate();
-
-    static sf::Shader& getShader(const std::string& key);
-private:
-    static std::map<std::string, sf::Shader, std::less<>> shaders;
-};
-
+    enum class Interp : uint64_t
+    {
+        LIN,
+        ACC,
+        BRA,
+        SIN,
+        SFO,
+        SIN0
+    };
 } // namespace segment_d1
 
-#endif // SHADERMANAGER_HPP
+#endif // ENUMS_HPP

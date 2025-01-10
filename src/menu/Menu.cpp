@@ -18,15 +18,19 @@
  */
 
 #include "menu/Menu.hpp"
+#include "WindowManager.hpp"
 
 namespace segment_d1
 {
 std::vector<Menu> Menu::s_menus;
 Menu *Menu::s_currentMenu;
 
-Menu::Menu() : m_id(0), m_menuLines({}) {}
+Menu::Menu() : m_id(0), m_index(0), m_menuLines({}), m_callback(nullptr) {}
 
-Menu::Menu(const uint64_t id) : m_id(id), m_menuLines({}) {}
+Menu::Menu(const uint64_t id, const CallbackType &callback)
+    : m_id(id), m_index(0), m_menuLines({}), m_callback(callback)
+{
+}
 
 Menu::Menu(const Menu &menu) noexcept = default;
 
@@ -34,12 +38,37 @@ Menu &Menu::operator=(const Menu &menu) = default;
 
 Menu::~Menu() = default;
 
-void Menu::update()
+MenuState Menu::update()
 {
-
+    auto res = MenuState(false, m_index);
+    if (WindowManager::isKeyPressed())
+    {
+        if (sf::Keyboard::Key::Up == WindowManager::getKeyPressed())
+        {
+            m_index = (m_index + 1) % m_menuLines.size();
+        }
+        else if (sf::Keyboard::Key::Down == WindowManager::getKeyPressed())
+        {
+            m_index = ((m_index + m_menuLines.size()) - 1) % m_menuLines.size();
+        }
+        else if (sf::Keyboard::Key::Enter == WindowManager::getKeyPressed())
+        {
+            res = m_menuLines[m_index](res);
+        }
+        else if (sf::Keyboard::Key::Escape == WindowManager::getKeyPressed())
+        {
+            // TODO
+        }
+        else
+        {
+            // Nothing to do
+        }
+    }
+    return res;
 }
 
-void Menu::draw(sf::RenderTarget &target, sf::RenderStates states) const
+void Menu::draw(sf::RenderTarget &target,
+                sf::RenderStates states) const // NOSONAR
 {
     for (const auto &menuLine : m_menuLines)
     {
@@ -49,7 +78,7 @@ void Menu::draw(sf::RenderTarget &target, sf::RenderStates states) const
 
 void Menu::initialize()
 {
-    s_menus = {Menu(0)};
+    s_menus = {Menu(0, [](const MenuState &m) noexcept { return m; })};
     s_currentMenu = &(s_menus[0]);
 }
 } // namespace segment_d1

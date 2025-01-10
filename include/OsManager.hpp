@@ -27,6 +27,7 @@
 #include "StaticObject.hpp"
 #include "Types.hpp"
 #include <SFML/Graphics.hpp>
+#include <map>
 #include <memory>
 #include <string>
 

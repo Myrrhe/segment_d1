@@ -22,14 +22,21 @@
 namespace segment_d1
 {
 
-MenuState::MenuState() : m_id(0) {}
+MenuState::MenuState() : m_navigation(false), m_id(0) {}
 
-MenuState::MenuState(const uint64_t id) : m_id(id) {}
+MenuState::MenuState(const bool navigation, const uint64_t id)
+    : m_navigation(navigation), m_id(id)
+{
+}
 
 MenuState::MenuState(const MenuState &menuState) noexcept = default;
 
 MenuState &MenuState::operator=(const MenuState &menuState) = default;
 
 MenuState::~MenuState() = default;
+
+bool MenuState::isNavigation() const { return m_navigation; }
+
+uint64_t MenuState::getId() const { return m_id; }
 
 } // namespace segment_d1

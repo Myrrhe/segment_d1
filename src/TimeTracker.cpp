@@ -1,6 +1,6 @@
 /*
- * The engine of the watch.
- * Copyright (C) 2020  Myrrhe <email>
+ * <one line to give the library's name and an idea of what it does.>
+ * Copyright (C) 2017  <copyright holder> <email>
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -17,29 +17,31 @@
  *
  */
 
-#ifndef SHADERMANAGER_HPP
-#define SHADERMANAGER_HPP
-#include "StaticObject.hpp"
-#include <SFML/Graphics.hpp>
-#include <map>
+#include "TimeTracker.hpp"
 
 namespace segment_d1
 {
+TimeTracker::TimeTracker() : m_watch(0.0) {}
 
-/** \class ShaderManager
-    \brief The engine of the software.
-*/
-class ShaderManager final : public StaticObject
+TimeTracker::TimeTracker(const TimeTracker &timeTracker) = default;
+
+TimeTracker::~TimeTracker() = default;
+
+TimeTracker &TimeTracker::operator=(const TimeTracker &right) = default;
+
+float64_t TimeTracker::getWatch() const
 {
-public:
-    static void initialize();
-    static void terminate();
+    return m_watch;
+}
 
-    static sf::Shader& getShader(const std::string& key);
-private:
-    static std::map<std::string, sf::Shader, std::less<>> shaders;
-};
+void TimeTracker::incrementWatch(const float64_t delta)
+{
+    m_watch += delta;
+}
+
+void TimeTracker::resetWatch()
+{
+    m_watch = 0.0;
+}
 
 } // namespace segment_d1
-
-#endif // SHADERMANAGER_HPP
